@@ -18,7 +18,7 @@ public class BookDetailResponseDTO {
     private Integer price;
     private Integer discountRate;
     private Integer discountPrice;
-    private Integer score;
+    private Double score;
     private boolean bookmark;
     private String description;
     private String publicationDate;
