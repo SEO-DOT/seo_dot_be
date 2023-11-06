@@ -1,7 +1,7 @@
 package com.example.seo_dot.user.domain;
 
+import com.example.seo_dot.user.domain.enums.Platform;
 import com.example.seo_dot.user.domain.enums.Role;
-import com.example.seo_dot.user.domain.enums.UserType;
 import com.nimbusds.openid.connect.sdk.claims.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,11 +29,20 @@ public class User {
 
     private String address;
     private Date birth;
-    private Gender gender;
     private int age;
-    private boolean activated;
-    private Role role;
-    private LocalDateTime deleted;
-    private UserType userType;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+    @Enumerated(EnumType.STRING)
+    private Platform platform;
+
+    private LocalDateTime deleted;
+    private boolean activated;
+    public User(String email, String nickname, String platform) {
+        this.email = email;
+        this.nickname = nickname;
+        this.role = Role.USER;
+    }
 }
