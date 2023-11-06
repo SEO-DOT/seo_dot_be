@@ -1,14 +1,12 @@
 package com.example.seo_dot.book.service;
 
 import com.example.seo_dot.book.domain.Book;
-import com.example.seo_dot.book.domain.Category;
 import com.example.seo_dot.book.dto.request.PageParam;
 import com.example.seo_dot.book.dto.response.BookDetailResponseDTO;
 import com.example.seo_dot.book.dto.response.BookListResponseDTO;
 import com.example.seo_dot.book.dto.response.KeywordResponseDTO;
 import com.example.seo_dot.book.dto.response.NewBookListResponseDTO;
 import com.example.seo_dot.book.repository.BookRepository;
-import com.example.seo_dot.book.repository.CategoryRepository;
 import com.example.seo_dot.book.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,23 +29,28 @@ public class BookService {
     private final String[] NEW_BOOK_CATEGORY_NAME = {"소설", "시/에세이", "인문", "가정/육아", "요리"};
     private final BookRepository bookRepository;
     private final KeywordRepository keywordRepository;
-    private final CategoryRepository categoryRepository;
+//    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
+
 
     @Transactional
     public BookDetailResponseDTO getBookDetail(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new RuntimeException());
         List<String> keywords = keywordRepository.findByKeyword(book.getId());
-        List<String> categories = new ArrayList<>();
-        Category category = categoryRepository.findById(book.getCategoryCode()).orElseThrow();
-        categories.add(category.getCategoryName());
+        Map<String, List<String>> categoryPathsMap = categoryService.getCategoryPathsMap();
 
-        while (category != null && category.getParentCategoryCode() != null) {
-            category = category.getParentCategoryCode();
-            categories.add(category.getCategoryName());
-        }
+//        List<String> categories = new ArrayList<>();
+//        Category category = categoryRepository.findById(book.getCategoryCode()).orElseThrow();
+//        categories.add(category.getCategoryName());
 
-        Collections.reverse(categories);
+//        while (category != null && category.getParentCategoryCode() != null) {
+//            category = category.getParentCategoryCode();
+//            categories.add(category.getCategoryName());
+//        }
+
+//        Collections.reverse(categories);
+        List<String> categories = categoryPathsMap.get(book.getCategoryCode());
         BookDetailResponseDTO response = new BookDetailResponseDTO(book, keywords, categories);
         book.updateViewCount();
         return response;
