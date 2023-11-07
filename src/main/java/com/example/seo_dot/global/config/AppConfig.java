@@ -1,4 +1,4 @@
-package com.example.seo_dot.global;
+package com.example.seo_dot.global.config;
 
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
