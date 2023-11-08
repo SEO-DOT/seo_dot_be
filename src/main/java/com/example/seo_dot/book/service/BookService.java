@@ -2,10 +2,7 @@ package com.example.seo_dot.book.service;
 
 import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.dto.request.PageParam;
-import com.example.seo_dot.book.dto.response.BookDetailResponseDTO;
-import com.example.seo_dot.book.dto.response.BookListResponseDTO;
-import com.example.seo_dot.book.dto.response.KeywordResponseDTO;
-import com.example.seo_dot.book.dto.response.NewBookListResponseDTO;
+import com.example.seo_dot.book.dto.response.*;
 import com.example.seo_dot.book.repository.BookRepository;
 import com.example.seo_dot.book.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
@@ -103,5 +100,11 @@ public class BookService {
                 .map(BookListResponseDTO::getBookId)
                 .collect(Collectors.toList());
         return bookIds;
+    }
+
+    public List<BookRecommendResponseDTO> getRecommendBookList(String category) {
+        List<BookRecommendResponseDTO> result = bookRepository.getRecommendBookList(category);
+        System.out.println(result.size());
+        return result;
     }
 }
