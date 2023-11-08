@@ -1,8 +1,8 @@
 package com.example.seo_dot.user.domain;
 
+import com.example.seo_dot.user.domain.enums.Gender;
 import com.example.seo_dot.user.domain.enums.Platform;
 import com.example.seo_dot.user.domain.enums.Role;
-import com.nimbusds.openid.connect.sdk.claims.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "users")
 @Getter
 public class User {
@@ -27,9 +27,11 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    private String address;
+    @Embedded
+    private Address address;
     private Date birth;
     private int age;
+    private String picture;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -40,9 +42,17 @@ public class User {
 
     private LocalDateTime deleted;
     private boolean activated;
-    public User(String email, String nickname, String platform) {
+    public User(String email, String nickname, Platform platform) {
         this.email = email;
         this.nickname = nickname;
         this.role = Role.USER;
+        this.platform = platform;
+    }
+
+    public User oauthUpdate(String name, String picture) {
+        this.nickname = name;
+        this.picture = picture;
+
+        return this;
     }
 }
