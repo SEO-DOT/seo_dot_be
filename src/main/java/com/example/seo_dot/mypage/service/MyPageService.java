@@ -31,18 +31,16 @@ public class MyPageService {
     private final ReviewRepository reviewRepository;
     private final ImageUploader imageUploader;
 
-    public MyPageUserInfoResponseDTO getMyPageUserInfo(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException());
-        Integer reviewCount = reviewRepository.countByUserId(userId);
+    public MyPageUserInfoResponseDTO getMyPageUserInfo(User user) {
+        Integer reviewCount = reviewRepository.countByUserId(user.getId());
         MyPageUserInfoResponseDTO result = new MyPageUserInfoResponseDTO(user, reviewCount.intValue());
         return result;
     }
 
-    public Slice<MyPageReviewResponseDTO> getMyPageReviews(ReviewPageParam pageParam, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException());
+    public Slice<MyPageReviewResponseDTO> getMyPageReviews(ReviewPageParam pageParam, User user) {
         PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getPer());
-        Slice<Review> reviews = reviewRepository.findByUserIdOrderByCreatedAtDesc(pageRequest, userId);
-        List<Long> reviewIdsByUserId = reviewLikeRepository.findReviewIdsByUserId(userId);
+        Slice<Review> reviews = reviewRepository.findByUserIdOrderByCreatedAtDesc(pageRequest, user.getId());
+        List<Long> reviewIdsByUserId = reviewLikeRepository.findReviewIdsByUserId(user.getId());
 
         List<MyPageReviewResponseDTO> result = reviews
                 .stream()
@@ -60,20 +58,19 @@ public class MyPageService {
     }
 
     @Transactional
-    public MessageResponseDTO updateProfileImage(MultipartFile multipartFile, String nickname, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException());
-        if (!nickname.equals(user.getNickName())) {
+    public MessageResponseDTO updateProfile(MultipartFile multipartFile, String nickname, User user) {
+        if (!nickname.equals(user.getNickname())) {
             boolean isExistsNickname = userRepository.existsByNickName(nickname);
             if (isExistsNickname) {
                 throw new IllegalArgumentException();
             }
         }
-        user.updateNickName(nickname);
-        if (!user.getProfileImage().equals(multipartFile.getOriginalFilename())) {
-            imageUploader.deleteImage(user.getProfileImage());
-            imageUploader.storeImage(multipartFile, ImageFolder.PROFILE);
+        String profileImage = multipartFile.getOriginalFilename();
+        if (!user.getPicture().equals(profileImage)) {
+            imageUploader.deleteImage(user.getPicture());
+            profileImage = imageUploader.storeImage(multipartFile, ImageFolder.PROFILE);
         }
+        user.updateUserInfo(nickname, profileImage);
         return MessageResponseDTO.createSuccessMessage200();
     }
 }
