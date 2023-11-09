@@ -4,7 +4,6 @@ import com.example.seo_dot.user.domain.enums.Gender;
 import com.example.seo_dot.user.domain.enums.Platform;
 import com.example.seo_dot.user.domain.enums.Role;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -54,5 +53,10 @@ public class User {
         this.picture = picture;
 
         return this;
+    }
+
+    public void updateUserInfo(String nickname, String picture) {
+        this.nickname = nickname;
+        this.picture = picture;
     }
 }
