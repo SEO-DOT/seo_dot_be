@@ -23,7 +23,7 @@ public class ReviewListResponseDTO {
     public ReviewListResponseDTO(Review review) {
         this.id = review.getId();
         this.userId = review.getUser().getId();
-        this.nickname = review.getUser().getNickName();
+        this.nickname = review.getUser().getNickname();
         this.contents = review.getContents();
         this.likes = review.getLikes();
         this.score = review.getScore();
