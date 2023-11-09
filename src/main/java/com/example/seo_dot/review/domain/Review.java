@@ -1,5 +1,6 @@
 package com.example.seo_dot.review.domain;
 
+import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.comment.domain.Comment;
 import com.example.seo_dot.global.entity.BaseEntity;
 import com.example.seo_dot.review.dto.request.ReviewCreateRequestDTO;
@@ -25,7 +26,9 @@ public class Review extends BaseEntity {
 
     private String contents;
 
-    private Long bookId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id")
+    private Book book;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -41,16 +44,16 @@ public class Review extends BaseEntity {
 
     private boolean deleted;
 
-    private Review(String contents, Long bookId, User user, Integer score, int likes) {
+    private Review(String contents, Book book, User user, Integer score, int likes) {
         this.contents = contents;
-        this.bookId = bookId;
+        this.book = book;
         this.user = user;
         this.score = score;
         this.likes = likes;
     }
 
-    public static Review createReview(Long bookId, User user, ReviewCreateRequestDTO reviewCreateRequestDTO) {
-        return new Review(reviewCreateRequestDTO.getContents(), bookId, user, reviewCreateRequestDTO.getScore(), 0);
+    public static Review createReview(Book book, User user, ReviewCreateRequestDTO reviewCreateRequestDTO) {
+        return new Review(reviewCreateRequestDTO.getContents(), book, user, reviewCreateRequestDTO.getScore(), 0);
     }
 
     public void updateReview(ReviewModifyRequestDTO requestDTO) {

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ReviewLikeRepository  extends JpaRepository<ReviewLike, Long> {
-    @Query("SELECT rl.review.id FROM ReviewLike rl WHERE rl.user.id = :userId And rl.review.bookId = :bookId")
+    @Query("SELECT rl.review.id FROM ReviewLike rl WHERE rl.user.id = :userId And rl.review.book.id = :bookId")
     List<Long> findReviewIdsByUserIdANDBookId(Long userId, Long bookId);
 
     ReviewLike findReviewLikeByReviewIdAndUserId(Long id, Long userId);
