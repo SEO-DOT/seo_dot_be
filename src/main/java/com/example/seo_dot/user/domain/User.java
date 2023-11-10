@@ -27,6 +27,9 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    private String subject;
+
     @Embedded
     private Address address;
     private Date birth;
@@ -42,7 +45,8 @@ public class User {
 
     private LocalDateTime deleted;
     private boolean activated;
-    public User(String email, String nickname, Platform platform) {
+    public User(String subject, String email, String nickname, Platform platform) {
+        this.subject = subject;
         this.email = email;
         this.nickname = nickname;
         this.role = Role.USER;
