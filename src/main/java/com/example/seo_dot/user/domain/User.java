@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -31,8 +34,16 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @Embedded
+    private Address address;
+
     private Gender gender;
     private Platform platform;
+    private boolean activated;
+    private boolean deleted;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public User(String username, String password, String email, UserRoleEnum role) {
         this.username = username;
