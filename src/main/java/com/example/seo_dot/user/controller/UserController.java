@@ -1,17 +1,22 @@
 package com.example.seo_dot.user.controller;
 
 import com.example.seo_dot.global.jwt.JwtUtil;
+import com.example.seo_dot.global.jwt.Token;
 import com.example.seo_dot.user.service.KakaoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final KakaoService kakaoService;
@@ -22,13 +27,11 @@ public class UserController {
     }
 
     @GetMapping("/user/kakao/callback")
-    public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        String token = kakaoService.kakaoLogin(code);
+    public ResponseEntity<Token> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
+        Token token =  kakaoService.kakaoLogin(code);
 
-        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-
-        return "redirect:/";
+        ResponseEntity<Token> tokens = ResponseEntity.ok().body(token);
+        log.info("response={}", tokens.getBody().getAccessToken());
+        return tokens;
     }
 }

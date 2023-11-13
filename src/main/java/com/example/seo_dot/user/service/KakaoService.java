@@ -1,6 +1,7 @@
 package com.example.seo_dot.user.service;
 
 import com.example.seo_dot.global.jwt.JwtUtil;
+import com.example.seo_dot.global.jwt.Token;
 import com.example.seo_dot.user.domain.User;
 import com.example.seo_dot.user.domain.enums.UserRoleEnum;
 import com.example.seo_dot.user.model.KakaoUserInfoDto;
@@ -32,8 +33,8 @@ public class KakaoService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
+    public Token kakaoLogin(String code) throws JsonProcessingException {
 
-    public String kakaoLogin(String code) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
 
@@ -44,10 +45,12 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken = jwtUtil.createToken(kakaoUser.getUsername(), kakaoUser.getRole());
+        String jwtAccessToken = jwtUtil.createAccessToken(kakaoUser.getUsername(), kakaoUser.getRole());
+        String jwtRefreshToken = jwtUtil.createRefreshToken(kakaoUser.getUsername(), kakaoUser.getRole());
 
+        Token token = new Token(jwtAccessToken,jwtRefreshToken);
 
-        return null;
+        return token;
     }
 
     private String getToken(String code) throws JsonProcessingException {
@@ -66,7 +69,7 @@ public class KakaoService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "본인의 REST API키");
+        body.add("client_id", "5d6a3f1827e56f4d31a8848a4663378d");
         body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
         body.add("code", code);
 
@@ -88,7 +91,8 @@ public class KakaoService {
 
     private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
         // 요청 URL 만들기
-        URI uri = UriComponentsBuilder
+        URI uri = UriComponentsBuilder        // 요청 URL 만들기
+
                 .fromUriString("https://kapi.kakao.com")
                 .path("/v2/user/me")
                 .encode()

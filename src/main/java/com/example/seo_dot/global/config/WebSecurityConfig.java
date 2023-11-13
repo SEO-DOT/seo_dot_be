@@ -1,9 +1,10 @@
 package com.example.seo_dot.global.config;
 
-import com.example.seo_dot.global.config.filter.JwtAuthenticationFilter;
+//import com.example.seo_dot.global.config.filter.JwtAuthenticationFilter;
 import com.example.seo_dot.global.config.filter.JwtAuthorizationFilter;
 import com.example.seo_dot.global.jwt.JwtUtil;
 import com.example.seo_dot.global.security.UserDetailsServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
@@ -37,12 +40,12 @@ public class WebSecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
-        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        return filter;
-    }
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+//        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+//        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+//        return filter;
+//    }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
@@ -67,14 +70,24 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
-        http.formLogin((formLogin) ->
-                formLogin
-                        .loginPage("/api/user/login-page").permitAll()
-        );
+        http.formLogin((formLogin) -> formLogin.disable());
+
+        http.cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                CorsConfiguration config = new CorsConfiguration();
+                config.addAllowedOriginPattern("*");
+                config.addAllowedMethod("*");
+                config.addAllowedHeader("*");
+                config.setAllowCredentials(true);
+
+                return config;
+            }
+        }));
 
         // 필터 관리
-        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

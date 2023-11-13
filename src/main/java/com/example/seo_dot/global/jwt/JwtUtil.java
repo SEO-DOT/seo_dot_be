@@ -17,8 +17,12 @@ import java.util.Date;
 @Slf4j(topic = "JwtUtil")
 @Component
 public class JwtUtil {
-    // Header KEY 값
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    // Access token Header KEY 값
+    public static final String AUTHORIZATION_ACCESS_HEADER = "AccessToken";
+
+    // Refresh token Header KEY 값
+    public static final String AUTHORIZATION_REFRESH_HEADER = "RefreshToken";
+
     // 사용자 권한 값의 KEY
     public static final String AUTHORIZATION_KEY = "auth";
     // Token 식별자
@@ -26,7 +30,10 @@ public class JwtUtil {
 
     // 토큰 만료시간
     @Value("${jwt.token.access-expiration-time}")
-    private long TOKEN_TIME;
+    private long ACCESS_TOKEN_EXPIRATION_TIME;
+
+    @Value("${jwt.token.refresh-expiration-time}")
+    private long REFRESH_TOKEN_EXPIRATION_TIME;
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
     private String secretKey;
@@ -39,15 +46,28 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // 토큰 생성
-    public String createToken(String username, UserRoleEnum role) {
+    // accessToken 생성
+    public String createAccessToken(String username, UserRoleEnum role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username) // 사용자 식별자값(ID)
                         .claim(AUTHORIZATION_KEY, role) // 사용자 권한
-                        .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                        .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_EXPIRATION_TIME)) // 만료 시간
+                        .setIssuedAt(date) // 발급일
+                        .signWith(key, signatureAlgorithm) // 암호화 알고리즘
+                        .compact();
+    }
+
+    public String createRefreshToken(String username, UserRoleEnum role) {
+        Date date = new Date();
+
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(username) // 사용자 식별자값(ID)
+                        .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                        .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_EXPIRATION_TIME)) // 만료 시간
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                         .compact();
@@ -55,7 +75,7 @@ public class JwtUtil {
 
     // header 에서 JWT 가져오기
     public String getJwtFromHeader(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        String bearerToken = request.getHeader(AUTHORIZATION_ACCESS_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }
