@@ -3,13 +3,13 @@ package com.example.seo_dot.user.domain.enums;
 import lombok.Getter;
 
 @Getter
-public enum Role {
+public enum UserRoleEnum {
     USER(Authority.USER),
     ADMIN(Authority.ADMIN);
 
     private final String authority;
 
-    Role(String authority) {
+    UserRoleEnum(String authority) {
         this.authority = authority;
     }
 
