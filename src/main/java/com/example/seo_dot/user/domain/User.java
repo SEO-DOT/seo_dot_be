@@ -41,6 +41,7 @@ public class User {
     private Platform platform;
     private boolean activated;
     private boolean deleted;
+    private Long kakaoId;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -50,5 +51,18 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
+    }
+
+    public User(String username, String password, String email, UserRoleEnum role, Long kakaoId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.kakaoId =kakaoId;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
     }
 }
