@@ -1,4 +1,4 @@
-package com.example.seo_dot.payment.service;
+package com.example.seo_dot.user.service;
 
 import com.example.seo_dot.global.jwt.JwtUtil;
 import com.example.seo_dot.user.domain.User;

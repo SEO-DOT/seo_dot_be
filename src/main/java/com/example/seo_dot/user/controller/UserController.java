@@ -1,7 +1,7 @@
 package com.example.seo_dot.user.controller;
 
 import com.example.seo_dot.global.jwt.JwtUtil;
-import com.example.seo_dot.payment.service.KakaoService;
+import com.example.seo_dot.user.service.KakaoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
