@@ -72,6 +72,7 @@ public class KakaoService {
         body.add("client_id", "5d6a3f1827e56f4d31a8848a4663378d");
         body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
         body.add("code", code);
+        body.add("client_secret","ZMhcJbCZIlWPZn01PRxV2KVbbdyDVRGY");
 
         RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
                 .post(uri)

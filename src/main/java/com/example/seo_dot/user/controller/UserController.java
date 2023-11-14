@@ -26,7 +26,7 @@ public class UserController {
         return "Hello World";
     }
 
-    @GetMapping("/user/kakao/callback")
+    @GetMapping("/api/user/kakao/callback")
     public ResponseEntity<Token> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
         Token token =  kakaoService.kakaoLogin(code);
 
