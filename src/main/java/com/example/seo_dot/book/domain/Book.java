@@ -29,6 +29,7 @@ public class Book {
     private Integer score;
     private String categoryCode;
     private String isAdultContent;
+    private Long bookmarkId;
 
     public Integer getDiscountPrice() {
         if (this.price <= 0 || this.discountRate <= 0) {
@@ -39,5 +40,13 @@ public class Book {
 
     public void updateViewCount() {
         this.viewCount++;
+    }
+
+    public void addBookmark(Long bookmarkId) {
+        this.bookmarkId = bookmarkId;
+    }
+
+    public void cancelBookmark() {
+        this.bookmarkId = null;
     }
 }
