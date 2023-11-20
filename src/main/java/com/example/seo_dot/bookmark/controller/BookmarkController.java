@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/bookmark")
 public class BookmarkController {
 
-    public BookmarkService bookmarkService;
+    private final BookmarkService bookmarkService;
 
     @PostMapping
     public ResponseEntity createBookmark(@RequestBody RequestBookmarkDto requestBookmarkDto) {
