@@ -2,6 +2,7 @@ package com.example.seo_dot.bookmark.domain;
 
 import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.bookmark.model.RequestBookmarkDto;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,8 @@ public class Bookmark {
     private String thumbnail;
     private String color;
     private Long userId;
+
+    @Nullable
     private Long bookId;
 
     public void updateBookmark(RequestBookmarkDto requestBookmarkDto) {
