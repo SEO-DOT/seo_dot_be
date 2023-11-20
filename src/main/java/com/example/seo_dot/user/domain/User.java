@@ -2,61 +2,67 @@ package com.example.seo_dot.user.domain;
 
 import com.example.seo_dot.user.domain.enums.Gender;
 import com.example.seo_dot.user.domain.enums.Platform;
-import com.example.seo_dot.user.domain.enums.Role;
+import com.example.seo_dot.user.domain.enums.UserRoleEnum;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "users")
-@Getter
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
-    private String nickname;
-
-    @Column(nullable = false)
-    private String subject;
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
     @Embedded
     private Address address;
-    private Date birth;
-    private int age;
-    private String picture;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-    @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Enumerated(EnumType.STRING)
     private Platform platform;
-
-    private LocalDateTime deleted;
     private boolean activated;
-    public User(String subject, String email, String nickname, Platform platform) {
-        this.subject = subject;
+    private boolean deleted;
+    private Long kakaoId;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    public User(String username, String password, String email, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
         this.email = email;
-        this.nickname = nickname;
-        this.role = Role.USER;
-        this.platform = platform;
+        this.role = role;
     }
 
-    public User oauthUpdate(String name, String picture) {
-        this.nickname = name;
-        this.picture = picture;
+    public User(String username, String password, String email, UserRoleEnum role, Long kakaoId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.kakaoId =kakaoId;
+    }
 
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
         return this;
     }
 }
