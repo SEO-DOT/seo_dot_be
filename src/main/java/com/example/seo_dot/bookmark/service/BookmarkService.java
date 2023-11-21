@@ -1,5 +1,6 @@
 package com.example.seo_dot.bookmark.service;
 
+import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.repository.BookRepository;
 import com.example.seo_dot.bookmark.domain.Bookmark;
 import com.example.seo_dot.bookmark.model.RequestBookmarkDto;
@@ -24,10 +25,12 @@ public class BookmarkService {
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
 
-    public void createBookmark(RequestBookmarkDto requestBookmarkDto) {
+    public void createBookmark(RequestBookmarkDto requestBookmarkDto, UserDetails userDetails) {
+        Long userId = userRepository.findByUsername(userDetails.getUsername()).orElseThrow().getId();
         Bookmark bookmark = Bookmark.builder()
                 .category(requestBookmarkDto.getCategory())
                 .color(requestBookmarkDto.getColor())
+                .userId(userId)
                 .build();
 
         bookmarkRepository.save(bookmark);
@@ -50,15 +53,18 @@ public class BookmarkService {
     }
 
     public void addBookmark(Long bookId, Long bookmarkId) {
-        bookRepository.findById(bookId).orElseThrow().addBookmark(bookmarkId);
+        Book book = bookRepository.findById(bookId).orElseThrow();
+        book.addBookmark(bookmarkId);
+        bookmarkRepository.findById(bookId).orElseThrow().createThumbnail(book);
+
     }
 
     public void cancelBookmark(Long bookId) {
         bookRepository.findById(bookId).orElseThrow().cancelBookmark();
     }
 
-    public List<ResponseBookmarkListDto> getBookmarkList(Long id) {
-        return bookRepository.findAllByBookmarkId(id).stream()
+    public List<ResponseBookmarkListDto> getBookmarkList(Long bookmarkId) {
+        return bookRepository.findAllByBookmarkId(bookmarkId).stream()
                 .map(ResponseBookmarkListDto::new)
                 .collect(Collectors.toList());
     }

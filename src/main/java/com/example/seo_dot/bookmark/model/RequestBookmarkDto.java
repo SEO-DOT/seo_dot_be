@@ -9,5 +9,4 @@ public class RequestBookmarkDto {
 
     private String category;
     private String color;
-
 }
