@@ -25,12 +25,29 @@ public class Cart {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    private int stock;
+    private int quantity;
 
-    public Cart(User user, Book book, int stock) {
-        this.id = id;
+    private Cart(User user, Book book, int quantity) {
         this.user = user;
         this.book = book;
-        this.stock = stock;
+        this.quantity = quantity;
+    }
+
+    public static Cart createCart(User user, Book book, int quantity) {
+        return new Cart(user, book, quantity);
+    }
+
+    public void updateQuantity(Integer quantity) {
+        if (quantity == null || quantity < 1) {
+            throw new IllegalArgumentException();
+        }
+        this.quantity = quantity;
+    }
+
+    public void increaseQuantity(Integer quantity) {
+        if (quantity == null || quantity < 1) {
+            throw new IllegalArgumentException();
+        }
+        this.quantity += quantity;
     }
 }
