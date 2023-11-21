@@ -1,22 +1,68 @@
 package com.example.seo_dot.user.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.example.seo_dot.user.domain.enums.Gender;
+import com.example.seo_dot.user.domain.enums.Platform;
+import com.example.seo_dot.user.domain.enums.UserRoleEnum;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
 @Getter
-@AllArgsConstructor
+@Setter
 @NoArgsConstructor
-@Builder
+@Table(name = "users")
 public class User {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
+    @Embedded
+    private Address address;
+
+    private Gender gender;
+    private Platform platform;
+    private boolean activated;
+    private boolean deleted;
+    private Long kakaoId;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    public User(String username, String password, String email, UserRoleEnum role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
+    public User(String username, String password, String email, UserRoleEnum role, Long kakaoId) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.kakaoId =kakaoId;
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
+    }
 }
