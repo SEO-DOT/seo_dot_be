@@ -1,4 +1,4 @@
-package com.example.seo_dot.cart.dto;
+package com.example.seo_dot.cart.dto.request;
 
 import lombok.Getter;
 
