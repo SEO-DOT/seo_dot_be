@@ -62,7 +62,7 @@ public class CartService {
         Cart cart = cartRepository.findById(requestDTO.getCartId())
                 .orElseThrow(() -> new IllegalArgumentException());
 
-        if (cart.getUser().getId() != user.getId()) {
+        if (!cart.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException();
         }
 
