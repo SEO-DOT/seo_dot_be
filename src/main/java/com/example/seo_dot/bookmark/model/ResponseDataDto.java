@@ -16,9 +16,9 @@ public class ResponseDataDto {
     private String message;
 
 
-    public static ResponseDataDto ok(HttpStatus status) {
+    public static ResponseDataDto ok() {
         return ResponseDataDto.builder()
-                .status(status)
+                .status(HttpStatus.OK)
                 .message("success")
                 .build();
     }

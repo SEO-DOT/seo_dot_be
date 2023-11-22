@@ -1,18 +1,14 @@
 package com.example.seo_dot.bookmark.controller;
 
 import com.example.seo_dot.bookmark.model.RequestBookmarkDto;
-import com.example.seo_dot.bookmark.model.ResponseDataDto;
 import com.example.seo_dot.bookmark.service.BookmarkService;
+import com.example.seo_dot.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,26 +18,23 @@ public class BookmarkController {
     private final BookmarkService bookmarkService;
 
     @PostMapping
-    public ResponseEntity createBookmark(@RequestBody RequestBookmarkDto requestBookmarkDto, @AuthenticationPrincipal UserDetails userDetails) {
-        bookmarkService.createBookmark(requestBookmarkDto, userDetails);
-        return ResponseEntity.ok().body(ResponseDataDto.ok(OK));
+    public ResponseEntity createBookmark(@RequestBody RequestBookmarkDto requestBookmarkDto, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        return ResponseEntity.ok().body(bookmarkService.createBookmark(requestBookmarkDto, userDetailsImpl));
     }
 
     @PutMapping("/{bookmarkId}")
     public ResponseEntity updateBookmark(@PathVariable Long bookmarkId, @RequestBody RequestBookmarkDto requestBookmarkDto) {
-        bookmarkService.updateBookmark(bookmarkId, requestBookmarkDto);
-        return ResponseEntity.ok().body(ResponseDataDto.ok(OK));
+        return ResponseEntity.ok().body(bookmarkService.updateBookmark(bookmarkId, requestBookmarkDto));
     }
 
     @DeleteMapping("/{bookmarkId}")
     public ResponseEntity deleteBookmark(@PathVariable Long bookmarkId) {
-        bookmarkService.deleteBookmark(bookmarkId);
-        return ResponseEntity.ok().body(ResponseDataDto.ok(OK));
+        return ResponseEntity.ok().body(bookmarkService.deleteBookmark(bookmarkId));
     }
 
     @GetMapping
-    public ResponseEntity<List> getBookmarks(@AuthenticationPrincipal UserDetails userDetails){
-        return ResponseEntity.ok().body(bookmarkService.readBookmarkList(userDetails));
+    public ResponseEntity<List> getBookmarks(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
+        return ResponseEntity.ok().body(bookmarkService.readBookmarkList(userDetailsImpl));
     }
 
     @GetMapping("/{bookmarkId}")
@@ -49,15 +42,15 @@ public class BookmarkController {
         return ResponseEntity.ok().body(bookmarkService.getBookmarkList(bookmarkId));
     }
 
-    @PostMapping("/{bookId}/{bookmarkId}")
+    @PostMapping("/{bookmarkId}/{bookId}")
     public ResponseEntity addBookmark(@PathVariable Long bookId, @PathVariable Long bookmarkId) {
-        bookmarkService.addBookmark(bookId, bookmarkId);
-        return ResponseEntity.ok().body(ResponseDataDto.ok(OK));
+
+        return ResponseEntity.ok().body(bookmarkService.addBookmark(bookId, bookmarkId));
     }
 
     @DeleteMapping("/{bookId}")
     public ResponseEntity cancelBookmark(@PathVariable Long bookId) {
-        bookmarkService.cancelBookmark(bookId);
-        return ResponseEntity.ok().body(ResponseDataDto.ok(OK));
+
+        return ResponseEntity.ok().body(bookmarkService.cancelBookmark(bookId));
     }
 }

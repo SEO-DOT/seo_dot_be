@@ -1,6 +1,8 @@
 package com.example.seo_dot.book.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "books")
 @Entity
+@AllArgsConstructor(access = PROTECTED)
+@Builder
 public class Book {
 
     @Id

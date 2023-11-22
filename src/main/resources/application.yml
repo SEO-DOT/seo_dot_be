@@ -6,4 +6,41 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 25392633394-ksee7f691mhmjis845ha3nvcdantk7ji.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+          kakao:
+            client-id: 5d6a3f1827e56f4d31a8848a4663378d
+            client-secret: ZMhcJbCZIlWPZn01PRxV2KVbbdyDVRGY
+            client-authentication-method: client_secret_post
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-name: kakao
+            scope:
+              - profile_image
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+jwt:
+  secret:
+    key: Zjg4ZDQ0MTE2NjFmZWIyMDQyNDYzOWY1YjY1MmNmMThkNmI3NTE1ZTU3YzAzMWFiZjdlMmJhOGVhN2VlNjc1OGUxNjJlYmVhMjcxZjhmNDYwOGI4N2RlMGFlZDU1OTZhMDEzNjlhOTk0NGFkMjAyODRiZDcwMDAxYzNjNzg5Y2E=
+  token:
+    access-expiration-time: 300
+    refresh-expiration-time: 600

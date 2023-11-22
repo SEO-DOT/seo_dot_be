@@ -6,10 +6,11 @@ import com.example.seo_dot.bookmark.domain.Bookmark;
 import com.example.seo_dot.bookmark.model.RequestBookmarkDto;
 import com.example.seo_dot.bookmark.model.ResponseBookmarkDto;
 import com.example.seo_dot.bookmark.model.ResponseBookmarkListDto;
+import com.example.seo_dot.bookmark.model.ResponseDataDto;
 import com.example.seo_dot.bookmark.repository.BookmarkRepository;
-import com.example.seo_dot.user.repository.UserRepository;
+import com.example.seo_dot.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +23,10 @@ import java.util.stream.Collectors;
 public class BookmarkService {
 
     private final BookmarkRepository bookmarkRepository;
-    private final UserRepository userRepository;
     private final BookRepository bookRepository;
 
-    public void createBookmark(RequestBookmarkDto requestBookmarkDto, UserDetails userDetails) {
-        Long userId = userRepository.findByUsername(userDetails.getUsername()).orElseThrow().getId();
+    public ResponseDataDto createBookmark(RequestBookmarkDto requestBookmarkDto, UserDetailsImpl userDetailsImpl) {
+        Long userId = userDetailsImpl.getUser().getId();
         Bookmark bookmark = Bookmark.builder()
                 .category(requestBookmarkDto.getCategory())
                 .color(requestBookmarkDto.getColor())
@@ -34,33 +34,36 @@ public class BookmarkService {
                 .build();
 
         bookmarkRepository.save(bookmark);
+        return ResponseDataDto.ok();
     }
 
-    public void updateBookmark(Long id, RequestBookmarkDto requestBookmarkDto) {
+    public ResponseDataDto updateBookmark(Long id, RequestBookmarkDto requestBookmarkDto) {
         bookmarkRepository.findById(id).orElseThrow().updateBookmark(requestBookmarkDto);
+        return ResponseDataDto.ok();
     }
 
-    public void deleteBookmark(Long id) {
+    public ResponseDataDto deleteBookmark(Long id) {
         bookmarkRepository.deleteById(id);
+        return ResponseDataDto.ok();
     }
 
     @Transactional(readOnly = true)
-    public List<ResponseBookmarkDto> readBookmarkList(UserDetails userDetails) {
-        Long userId = userRepository.findByUsername(userDetails.getUsername()).orElseThrow().getId();
-        return bookmarkRepository.findAllByUserId(userId).stream()
+    public List<ResponseBookmarkDto> readBookmarkList(UserDetailsImpl userDetailsImpl) {
+        return bookmarkRepository.findAllByUserId(userDetailsImpl.getUser().getId()).stream()
                 .map(ResponseBookmarkDto::new)
                 .collect(Collectors.toList());
     }
 
-    public void addBookmark(Long bookId, Long bookmarkId) {
+    public ResponseDataDto addBookmark(Long bookId, Long bookmarkId) {
         Book book = bookRepository.findById(bookId).orElseThrow();
         book.addBookmark(bookmarkId);
-        bookmarkRepository.findById(bookId).orElseThrow().createThumbnail(book);
-
+        bookmarkRepository.findById(bookmarkId).orElseThrow().createThumbnail(book);
+        return ResponseDataDto.ok();
     }
 
-    public void cancelBookmark(Long bookId) {
+    public ResponseDataDto cancelBookmark(Long bookId) {
         bookRepository.findById(bookId).orElseThrow().cancelBookmark();
+        return ResponseDataDto.ok();
     }
 
     public List<ResponseBookmarkListDto> getBookmarkList(Long bookmarkId) {
