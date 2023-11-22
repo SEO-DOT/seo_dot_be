@@ -79,6 +79,7 @@ public class WebSecurityConfig {
                 config.addAllowedOriginPattern("*");
                 config.addAllowedMethod("*");
                 config.addAllowedHeader("*");
+                config.addExposedHeader("Set-Cookie");
                 config.setAllowCredentials(true);
 
                 return config;
