@@ -3,6 +3,7 @@ package com.example.seo_dot.comment.domain;
 import com.example.seo_dot.comment.dto.request.CommentCreateRequestDTO;
 import com.example.seo_dot.global.entity.BaseEntity;
 import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,20 +23,22 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "review_id")
     private Review review;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String contents;
 
     private boolean deleted;
 
-    private Comment(Review review, Long userId, String contents) {
+    private Comment(Review review, User user, String contents) {
         this.review = review;
-        this.userId = userId;
+        this.user = user;
         this.contents = contents;
     }
 
-    public static Comment createComment(Review review, Long userId, CommentCreateRequestDTO requestDTO) {
-        return new Comment(review, userId, requestDTO.getContents());
+    public static Comment createComment(Review review, User user, CommentCreateRequestDTO requestDTO) {
+        return new Comment(review, user, requestDTO.getContents());
     }
 
     public void updateComment(CommentModifyRequestDTO requestDTO) {

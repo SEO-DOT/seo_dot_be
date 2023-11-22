@@ -3,15 +3,14 @@ package com.example.seo_dot.review.service;
 import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.repository.BookRepository;
 import com.example.seo_dot.global.dto.MessageResponseDTO;
-import com.example.seo_dot.review.dto.request.ReviewPageParam;
-import com.example.seo_dot.review.dto.request.ReviewCreateRequestDTO;
 import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.review.dto.request.ReviewCreateRequestDTO;
 import com.example.seo_dot.review.dto.request.ReviewModifyRequestDTO;
+import com.example.seo_dot.review.dto.request.ReviewPageParam;
 import com.example.seo_dot.review.dto.response.ReviewListResponseDTO;
 import com.example.seo_dot.review.repository.ReviewLikeRepository;
 import com.example.seo_dot.review.repository.ReviewRepository;
 import com.example.seo_dot.user.domain.User;
-import com.example.seo_dot.user.domain.enums.Platform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -42,7 +41,6 @@ public class ReviewService {
     }
 
     public Slice<ReviewListResponseDTO> getReviews(ReviewPageParam reviewPageParam, Long bookId, User user) {
-        User user1 = new User("email","nickname", Platform.GOOGLE);
         bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException());
 
@@ -50,13 +48,13 @@ public class ReviewService {
         Slice<Review> reviews = null;
 
         if (reviewPageParam.getSort().equals("new")) {
-            reviews = reviewRepository.getReviewsOrderByCreatedAtDesc(bookId, user1.getId(), pageRequest);
+            reviews = reviewRepository.getReviewsOrderByCreatedAtDesc(bookId, user.getId(), pageRequest);
         }
         if (reviewPageParam.getSort().equals("hot")) {
-            reviews = reviewRepository.getReviewsOrderByLikesDesc(bookId, user1.getId(), pageRequest);
+            reviews = reviewRepository.getReviewsOrderByLikesDesc(bookId, user.getId(), pageRequest);
         }
 
-        List<Long> likedReviewIds = reviewLikeRepository.findReviewIdsByUserIdANDBookId(user1.getId(), bookId);
+        List<Long> likedReviewIds = reviewLikeRepository.findReviewIdsByUserIdANDBookId(user.getId(), bookId);
         List<ReviewListResponseDTO> reviewListResponseDTOList = reviews.stream()
                 .map(review -> {
                     boolean liked = likedReviewIds.contains(review.getId());
