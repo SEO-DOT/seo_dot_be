@@ -1,36 +1,30 @@
 package com.example.seo_dot.payment.controller;
 
-import com.siot.IamportRestClient.IamportClient;
-import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.example.seo_dot.payment.model.PaymentCallbackRequest;
+import com.example.seo_dot.payment.service.PaymentService;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
-import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class PaymentController {
 
-    @Value("${iamport.key}")
-    private String restApiKey;
-    @Value("${iamport.secret}")
-    private String restApiSecret;
 
-    private IamportClient iamportClient;
+    private final PaymentService paymentService;
 
-    @PostConstruct
-    public void init() {
-        this.iamportClient = new IamportClient(restApiKey, restApiSecret);
+    @PostMapping("/payment")
+    public ResponseEntity<IamportResponse<Payment>> validationPayment(@RequestBody PaymentCallbackRequest request) {
+        IamportResponse<Payment> iamportResponse = paymentService.paymentByCallback(request);
+
+        log.info("결제 응답={}", iamportResponse.getResponse().toString());
+
+        return new ResponseEntity<>(iamportResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/verifyIamport/{imp_uid}")
-    public IamportResponse<Payment> paymentByImpUid(@PathVariable("imp_uid") String imp_uid) throws IamportResponseException, IOException, IamportResponseException, IOException {
-        return iamportClient.paymentByImpUid(imp_uid);
-    }
 }
