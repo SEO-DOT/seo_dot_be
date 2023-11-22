@@ -15,7 +15,7 @@ public class CommentListResponseDTO {
     private LocalDateTime createdDate;
 
     public CommentListResponseDTO(Comment comment) {
-        this.userId = comment.getUserId();
+        this.userId = comment.getUser().getId();
         this.commentId = comment.getId();
         this.reviewId = comment.getReview().getId();
         this.contents = comment.getContents();
