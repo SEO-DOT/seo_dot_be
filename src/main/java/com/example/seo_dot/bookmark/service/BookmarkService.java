@@ -10,7 +10,6 @@ import com.example.seo_dot.bookmark.model.ResponseDataDto;
 import com.example.seo_dot.bookmark.repository.BookmarkRepository;
 import com.example.seo_dot.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,8 +55,9 @@ public class BookmarkService {
 
     public ResponseDataDto addBookmark(Long bookId, Long bookmarkId) {
         Book book = bookRepository.findById(bookId).orElseThrow();
-        book.addBookmark(bookmarkId);
-        bookmarkRepository.findById(bookmarkId).orElseThrow().createThumbnail(book);
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow();
+        book.addBookmark(bookmark);
+        bookmark.createThumbnail(book);
         return ResponseDataDto.ok();
     }
 
