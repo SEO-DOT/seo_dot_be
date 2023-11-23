@@ -21,10 +21,6 @@ public class UserDetailsImpl implements UserDetails {
         return user;
     }
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
 
     @Override
     public String getUsername() {
@@ -41,6 +37,11 @@ public class UserDetailsImpl implements UserDetails {
         authorities.add(simpleGrantedAuthority);
 
         return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
     }
 
     @Override

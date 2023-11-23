@@ -2,7 +2,9 @@ package com.example.seo_dot.user.service;
 
 import com.example.seo_dot.global.jwt.JwtUtil;
 import com.example.seo_dot.global.jwt.Token;
+import com.example.seo_dot.user.domain.OauthId;
 import com.example.seo_dot.user.domain.User;
+import com.example.seo_dot.user.domain.enums.Platform;
 import com.example.seo_dot.user.domain.enums.UserRoleEnum;
 import com.example.seo_dot.user.model.KakaoUserInfoDto;
 import com.example.seo_dot.user.repository.UserRepository;
@@ -45,8 +47,8 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        String jwtAccessToken = jwtUtil.createAccessToken(kakaoUser.getUsername(), kakaoUser.getRole());
-        String jwtRefreshToken = jwtUtil.createRefreshToken(kakaoUser.getUsername(), kakaoUser.getRole());
+        String jwtAccessToken = jwtUtil.createAccessToken(kakaoUser);
+        String jwtRefreshToken = jwtUtil.createRefreshToken(kakaoUser);
 
         Token token = new Token(jwtAccessToken,jwtRefreshToken);
 
@@ -70,7 +72,7 @@ public class KakaoService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "5d6a3f1827e56f4d31a8848a4663378d");
-        body.add("redirect_uri", "http://localhost:8080/api/user/kakao/callback");
+        body.add("redirect_uri", "http://localhost:3000/auth/kakao/callback");
         body.add("code", code);
         body.add("client_secret","ZMhcJbCZIlWPZn01PRxV2KVbbdyDVRGY");
 
@@ -117,7 +119,7 @@ public class KakaoService {
         );
 
         JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
-        Long id = jsonNode.get("id").asLong();
+        String id = jsonNode.get("id").asText();
         String nickname = jsonNode.get("properties")
                 .get("nickname").asText();
         String email = jsonNode.get("kakao_account")
@@ -130,29 +132,13 @@ public class KakaoService {
     private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
 
         // DB 에 중복된 Kakao Id 가 있는지 확인
-        Long kakaoId = kakaoUserInfo.getId();
-        User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
+        String kakaoId = kakaoUserInfo.getId();
+        OauthId oauthId = new OauthId(kakaoId, Platform.KAKAO);
+        User kakaoUser = userRepository.findByOauthId(oauthId).orElse(null);
 
         if (kakaoUser == null) {
-            // 카카오 사용자 email 동일한 email 가진 회원이 있는지 확인
-            String kakaoEmail = kakaoUserInfo.getEmail();
-            User sameEmailUser = userRepository.findByEmail(kakaoEmail).orElse(null);
-
-            if (sameEmailUser != null) {
-                kakaoUser = sameEmailUser;
-                // 기존 회원정보에 카카오 Id 추가
-                kakaoUser = kakaoUser.kakaoIdUpdate(kakaoId);
-            } else {
-                // 신규 회원가입
-                // password: random UUID
-                String password = UUID.randomUUID().toString();
-                String encodedPassword = passwordEncoder.encode(password);
-
-                // email: kakao email
-                String email = kakaoUserInfo.getEmail();
-
-                kakaoUser = new User(kakaoUserInfo.getNickname(), encodedPassword, email, UserRoleEnum.USER, kakaoId);
-            }
+            // 신규 회원가입
+            kakaoUser = new User(kakaoUserInfo, oauthId);
 
             userRepository.save(kakaoUser);
         }
