@@ -99,9 +99,4 @@ public class ReviewService {
         review.deleteReview();
         return MessageResponseDTO.createSuccessMessage200();
     }
-
-    public List<BestReviewListResponseDTO> getBestReviews() {
-        List<BestReviewListResponseDTO> result = reviewRepository.getBestReviews();
-        return result;
-    }
 }
