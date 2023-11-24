@@ -21,7 +21,7 @@ public class MyPageReviewResponseDTO {
 
     public MyPageReviewResponseDTO(Review review, MyPageReviewListBook book) {
         this.reviewId = review.getId();
-        this.nickname = review.getUser().getNickName();
+        this.nickname = review.getUser().getNickname();
         this.contents = review.getContents();
         this.createdDate = review.getCreatedAt();
         this.likes = review.getLikes();
