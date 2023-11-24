@@ -7,4 +7,6 @@ public interface ImageUploader {
     String storeImage(MultipartFile multipartFile, ImageFolder imageFolder);
 
     void deleteImage(String image);
+
+    String getDefaultProfileImage();
 }

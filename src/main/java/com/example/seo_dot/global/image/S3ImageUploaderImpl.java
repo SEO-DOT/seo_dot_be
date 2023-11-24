@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLDecoder;
@@ -31,6 +30,9 @@ public class S3ImageUploaderImpl implements ImageUploader {
     private final AmazonS3 amazonS3;
 
     private final ImageValidator imageValidator;
+
+    @Value("${default.profile.image.url}")
+    private String defaultProfileImageUrl;
 
     @Override
     public String storeImage(MultipartFile multipartFile, ImageFolder imageFolder) {
@@ -66,15 +68,20 @@ public class S3ImageUploaderImpl implements ImageUploader {
         }
     }
 
+    @Override
+    public String getDefaultProfileImage() {
+        return this.defaultProfileImageUrl;
+    }
+
     private String createStoreFileName(String originalFileName, ImageFolder imageFolder) {
         String ext = extractExt(originalFileName);
         String fileName = extractFileName(originalFileName);
         String folderName = imageFolder.getFolderName();
-        String fileSeparator = File.separator;
+//        String fileSeparator = File.separator;
         String nowTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE);
         String uuid = UUID.randomUUID().toString();
         log.info("fileName = {} ", fileName);
-        return folderName + fileSeparator + nowTime + fileName + uuid + "." + ext;
+        return folderName + "/" + nowTime + fileName + uuid + "." + ext;
     }
 
 
