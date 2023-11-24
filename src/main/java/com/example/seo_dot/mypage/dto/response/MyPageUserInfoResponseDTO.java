@@ -12,18 +12,23 @@ public class MyPageUserInfoResponseDTO {
 
     private String nickName;
 
-    private String address;
-
     private int reviewCount;
 
     private int point;
 
-    public MyPageUserInfoResponseDTO(User user, int reviewCount) {
-        this.userId = user.getId();
-        this.profileImage = user.getProfileImage();
-        this.nickName = user.getNickName();
+    private MyPageUserInfoResponseDTO(Long userId, String profileImage, String nickName, int reviewCount, int point) {
+        this.userId = userId;
+        this.profileImage = profileImage;
+        this.nickName = nickName;
         this.reviewCount = reviewCount;
-        this.address = address;
-        this.point = user.getPoint();
+        this.point = point;
+    }
+
+    public static MyPageUserInfoResponseDTO createFromUser(User user, int reviewCount) {
+        return new MyPageUserInfoResponseDTO(user.getId(), user.getProfileImage(), user.getNickname(), reviewCount, user.getPoint());
+    }
+
+    public static MyPageUserInfoResponseDTO createWithDefaultProfileImage(User user, int reviewCount, String profileImage) {
+        return new MyPageUserInfoResponseDTO(user.getId(), profileImage, user.getNickname(), reviewCount, user.getPoint());
     }
 }
