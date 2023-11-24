@@ -3,12 +3,15 @@ package com.example.seo_dot.mypage.service;
 import com.example.seo_dot.global.dto.MessageResponseDTO;
 import com.example.seo_dot.global.image.ImageFolder;
 import com.example.seo_dot.global.image.ImageUploader;
+import com.example.seo_dot.mypage.dto.request.MyPageUserUpdateRequestDTO;
 import com.example.seo_dot.mypage.dto.response.MyPageReviewResponseDTO;
+import com.example.seo_dot.mypage.dto.response.MyPageUserDetailResponseDTO;
 import com.example.seo_dot.mypage.dto.response.MyPageUserInfoResponseDTO;
 import com.example.seo_dot.review.domain.Review;
 import com.example.seo_dot.review.dto.request.ReviewPageParam;
 import com.example.seo_dot.review.repository.ReviewLikeRepository;
 import com.example.seo_dot.review.repository.ReviewRepository;
+import com.example.seo_dot.user.domain.Address;
 import com.example.seo_dot.user.domain.User;
 import com.example.seo_dot.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +36,12 @@ public class MyPageService {
 
     public MyPageUserInfoResponseDTO getMyPageUserInfo(User user) {
         Integer reviewCount = reviewRepository.countByUserId(user.getId());
-        MyPageUserInfoResponseDTO result = new MyPageUserInfoResponseDTO(user, reviewCount.intValue());
-        return result;
+
+        if (user.getProfileImage() == null) {
+            return MyPageUserInfoResponseDTO.createWithDefaultProfileImage(user,reviewCount, imageUploader.getDefaultProfileImage());
+        }
+
+        return MyPageUserInfoResponseDTO.createFromUser(user,reviewCount);
     }
 
     public Slice<MyPageReviewResponseDTO> getMyPageReviews(ReviewPageParam pageParam, User user) {
@@ -54,23 +61,53 @@ public class MyPageService {
                 })
                 .collect(Collectors.toList());
 
-        return new SliceImpl<>(result,reviews.getPageable(),reviews.hasNext());
+        return new SliceImpl<>(result, reviews.getPageable(), reviews.hasNext());
     }
 
     @Transactional
     public MessageResponseDTO updateProfile(MultipartFile multipartFile, String nickname, User user) {
         if (!nickname.equals(user.getNickname())) {
-            boolean isExistsNickname = userRepository.existsByNickName(nickname);
+            boolean isExistsNickname = userRepository.existsByNickname(nickname);
             if (isExistsNickname) {
                 throw new IllegalArgumentException();
             }
         }
-        String profileImage = multipartFile.getOriginalFilename();
-        if (!user.getPicture().equals(profileImage)) {
-            imageUploader.deleteImage(user.getPicture());
-            profileImage = imageUploader.storeImage(multipartFile, ImageFolder.PROFILE);
+
+        if (multipartFile != null && !multipartFile.isEmpty()) {
+            updateProfileImage(multipartFile, user);
+        } else {
+            deleteExistingProfileImage(user);
         }
-        user.updateUserInfo(nickname, profileImage);
+        user.updateUserProfile(nickname, getProfileImagePath(multipartFile, user));
+        userRepository.save(user);
         return MessageResponseDTO.createSuccessMessage200();
+    }
+
+    @Transactional
+    public MessageResponseDTO updateUserInfo(MyPageUserUpdateRequestDTO requestDTO, User user) {
+        Address address = new Address(requestDTO.getZoneCode(), requestDTO.getStreetAddress(), requestDTO.getDetailAddress());
+        user.updateUserInfo(requestDTO.getUserName(), address, requestDTO.getPhoneNumber());
+        userRepository.save(user);
+        return MessageResponseDTO.createSuccessMessage200();
+    }
+
+    public MyPageUserDetailResponseDTO getUserDetail(User user) {
+        MyPageUserDetailResponseDTO result = new MyPageUserDetailResponseDTO(user);
+        return result;
+    }
+
+    private void deleteExistingProfileImage(User user) {
+        if (user.getProfileImage() != null) {
+            imageUploader.deleteImage(user.getProfileImage());
+        }
+    }
+    private void updateProfileImage(MultipartFile multipartFile, User user) {
+        String profileImage = imageUploader.storeImage(multipartFile, ImageFolder.PROFILE);
+        deleteExistingProfileImage(user);
+        user.setProfileImage(profileImage);
+    }
+
+    private String getProfileImagePath(MultipartFile multipartFile, User user) {
+        return (multipartFile != null && !multipartFile.isEmpty()) ? user.getProfileImage() : null;
     }
 }
