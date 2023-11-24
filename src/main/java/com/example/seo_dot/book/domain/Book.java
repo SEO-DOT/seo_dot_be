@@ -1,8 +1,11 @@
 package com.example.seo_dot.book.domain;
 
+import com.example.seo_dot.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -26,7 +29,7 @@ public class Book {
     private Integer viewCount;
     private String status;
     private Integer stock;
-    private Integer score;
+    private Double score;
     private String categoryCode;
     private String isAdultContent;
 
@@ -39,5 +42,12 @@ public class Book {
 
     public void updateViewCount() {
         this.viewCount++;
+    }
+
+    public void updateScore(List<Review> reviews) {
+        this.score = reviews.stream()
+                .mapToDouble(Review::getScore)
+                .average()
+                .orElse(0.0);
     }
 }
