@@ -1,6 +1,8 @@
 package com.example.seo_dot.review.repository;
 
 import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.review.dto.response.BestReviewListResponseDTO;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.example.seo_dot.comment.domain.QComment.comment;
 import static com.example.seo_dot.review.domain.QReview.review;
 
 @RequiredArgsConstructor
@@ -46,6 +49,21 @@ public class QReviewRepositoryImpl implements QReviewRepository {
                 .fetch();
 
         return createResultWithNextPage(pageable, reviews);
+    }
+
+    @Override
+    public List<BestReviewListResponseDTO> getBestReviews() {
+        List<BestReviewListResponseDTO> reviews = queryFactory.select(Projections.constructor(BestReviewListResponseDTO.class,
+                        review.id, review.user.nickname, review.contents, review.score, review.spoiler, review.purchaseStatus, review.likes, review.commentList.size().intValue(),
+                        Projections.constructor(BestReviewListResponseDTO.BestReviewBookResponseDTO.class,
+                                review.book.id, review.book.image, review.book.title, review.book.author, review.book.publisher)))
+                .from(review)
+                .where(review.deleted.isFalse())
+                .innerJoin(review.commentList).on(comment.deleted.isFalse())
+                .orderBy(review.likes.desc())
+                .limit(5)
+                .fetch();
+        return reviews;
     }
 
     private NumberExpression<Integer> userReviewFirst(Long userId) {

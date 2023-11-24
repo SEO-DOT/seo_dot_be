@@ -7,6 +7,7 @@ import com.example.seo_dot.review.domain.Review;
 import com.example.seo_dot.review.dto.request.ReviewCreateRequestDTO;
 import com.example.seo_dot.review.dto.request.ReviewModifyRequestDTO;
 import com.example.seo_dot.review.dto.request.ReviewPageParam;
+import com.example.seo_dot.review.dto.response.BestReviewListResponseDTO;
 import com.example.seo_dot.review.dto.response.ReviewListResponseDTO;
 import com.example.seo_dot.review.repository.ReviewLikeRepository;
 import com.example.seo_dot.review.repository.ReviewRepository;
@@ -32,7 +33,8 @@ public class ReviewService {
     public MessageResponseDTO createReview(Long bookId, ReviewCreateRequestDTO reviewCreateRequestDTO, User user) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException());
-        Review review = Review.createReview(book, user, reviewCreateRequestDTO);
+        //TODO 주문 내역이 완성되면 구매자 여부 조회 후 같이 저장
+        Review review = Review.createReview(book, user, reviewCreateRequestDTO, false);
         reviewRepository.save(review);
 
         List<Review> findReviews = reviewRepository.findByBookId(bookId);
@@ -96,5 +98,10 @@ public class ReviewService {
 
         review.deleteReview();
         return MessageResponseDTO.createSuccessMessage200();
+    }
+
+    public List<BestReviewListResponseDTO> getBestReviews() {
+        List<BestReviewListResponseDTO> result = reviewRepository.getBestReviews();
+        return result;
     }
 }
