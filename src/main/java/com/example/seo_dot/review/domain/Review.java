@@ -44,29 +44,35 @@ public class Review extends BaseEntity {
 
     private boolean deleted;
 
-    private Review(String contents, Book book, User user, Integer score, int likes) {
+    private boolean spoiler;
+
+    private boolean purchaseStatus;
+
+    private Review(String contents, Book book, User user, Integer score, int likes, boolean spoiler, boolean purchaseStatus) {
         this.contents = contents;
         this.book = book;
         this.user = user;
         this.score = score;
         this.likes = likes;
+        this.spoiler = spoiler;
+        this.purchaseStatus = purchaseStatus;
     }
 
-    public static Review createReview(Book book, User user, ReviewCreateRequestDTO reviewCreateRequestDTO) {
-        return new Review(reviewCreateRequestDTO.getContents(), book, user, reviewCreateRequestDTO.getScore(), 0);
+    public static Review createReview(Book book, User user, ReviewCreateRequestDTO reviewCreateRequestDTO, boolean purchaseStatus) {
+        return new Review(reviewCreateRequestDTO.getContents(), book, user, reviewCreateRequestDTO.getScore(), 0, reviewCreateRequestDTO.isSpoiler(), purchaseStatus);
     }
 
     public void updateReview(ReviewModifyRequestDTO requestDTO) {
         this.contents = requestDTO.getContents();
     }
 
+    //TODO 종속된 Comment의 개수만큼 Update Query 발생 예상
     public void deleteReview() {
         this.deleted = true;
 
-        if (commentList != null) {
-            for (Comment comment : commentList) {
-                comment.deleteComment();
-            }
+        if (this.commentList != null && !this.commentList.isEmpty()) {
+            this.commentList.forEach(Comment::deleteComment);
+            this.commentList.clear();
         }
     }
 
