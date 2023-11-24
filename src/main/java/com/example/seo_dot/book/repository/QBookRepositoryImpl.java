@@ -3,9 +3,11 @@ package com.example.seo_dot.book.repository;
 import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.dto.request.PageParam;
 import com.example.seo_dot.book.dto.response.BookListResponseDTO;
+import com.example.seo_dot.book.dto.response.BookRecommendResponseDTO;
 import com.example.seo_dot.book.dto.response.KeywordResponseDTO;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -78,6 +80,15 @@ public class QBookRepositoryImpl implements QBookRepository {
             result.computeIfAbsent(bookId, k -> new ArrayList<>()).add(keyword);
         }
         return result;
+    }
+    @Override
+    public List<BookRecommendResponseDTO> getRecommendBookList(String category) {
+        return queryFactory.select(Projections.constructor(BookRecommendResponseDTO.class, book))
+                .from(book)
+                .where(book.categoryCode.eq(category))
+                .orderBy(Expressions.numberTemplate(Double.class, "RAND()").asc())
+                .limit(10)
+                .fetch();
     }
 
     private Slice<BookListResponseDTO> createResultWithNextPage(Pageable pageable, List<BookListResponseDTO> results) {

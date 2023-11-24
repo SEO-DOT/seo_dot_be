@@ -4,8 +4,8 @@ import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.dto.request.PageParam;
 import com.example.seo_dot.book.dto.response.BookDetailResponseDTO;
 import com.example.seo_dot.book.dto.response.BookListResponseDTO;
+import com.example.seo_dot.book.dto.response.BookRecommendResponseDTO;
 import com.example.seo_dot.book.dto.response.KeywordResponseDTO;
-import com.example.seo_dot.book.dto.response.NewBookListResponseDTO;
 import com.example.seo_dot.book.repository.BookRepository;
 import com.example.seo_dot.book.repository.KeywordRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,10 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
+import static com.example.seo_dot.book.service.BookUtils.getBookIds;
 
 @RequiredArgsConstructor
 @Service
@@ -70,38 +69,8 @@ public class BookService {
         return result;
     }
 
-    public List<BookListResponseDTO> getBestSeller() {
-
-        List<BookListResponseDTO> result = bookRepository.findBestSellers();
-        List<Long> bookIds = getBookIds(result);
-
-        // keyword 조회 (In 사용)
-        Map<Long, List<KeywordResponseDTO>> findKeywordsMap = bookRepository.findBestSellersKeywords(bookIds);
-        result.forEach(o -> o.setKeywordList(findKeywordsMap.get(o.getBookId())));
-
-        System.out.println(result.size());
+    public List<BookRecommendResponseDTO> getRecommendBookList(String category) {
+        List<BookRecommendResponseDTO> result = bookRepository.getRecommendBookList(category);
         return result;
-    }
-
-    public List<NewBookListResponseDTO> getNewBooks() {
-        List<NewBookListResponseDTO> result = new ArrayList<>();
-        for (int i = 0; i < NEW_BOOK_CATEGORY_CODE.length; i++) {
-            result.add(new NewBookListResponseDTO());
-            List<Book> newBookByCategoryCode = bookRepository.findNewBookByCategoryCode(NEW_BOOK_CATEGORY_CODE[i]);
-            List<NewBookListResponseDTO.MainBookListResponseDTO> mainBookListResponseDTOList = new ArrayList<>();
-            for (Book book : newBookByCategoryCode) {
-                mainBookListResponseDTOList.add(new NewBookListResponseDTO.MainBookListResponseDTO(book));
-            }
-            result.get(i).setCategory(NEW_BOOK_CATEGORY_NAME[i]);
-            result.get(i).getBookList().add(mainBookListResponseDTOList);
-        }
-        return result;
-    }
-
-    private List<Long> getBookIds(Iterable<BookListResponseDTO> result) {
-        List<Long> bookIds = StreamSupport.stream(result.spliterator(), false)
-                .map(BookListResponseDTO::getBookId)
-                .collect(Collectors.toList());
-        return bookIds;
     }
 }

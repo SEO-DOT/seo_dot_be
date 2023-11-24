@@ -9,13 +9,15 @@ import java.time.LocalDateTime;
 public class CommentListResponseDTO {
 
     private Long userId;
+    private String nickName;
     private Long commentId;
     private Long reviewId;
     private String contents;
     private LocalDateTime createdDate;
 
     public CommentListResponseDTO(Comment comment) {
-        this.userId = comment.getUserId();
+        this.userId = comment.getUser().getId();
+        this.nickName = comment.getUser().getNickname();
         this.commentId = comment.getId();
         this.reviewId = comment.getReview().getId();
         this.contents = comment.getContents();
