@@ -1,7 +1,6 @@
 package com.example.seo_dot.user.domain;
 
 import com.example.seo_dot.user.domain.enums.Gender;
-import com.example.seo_dot.user.domain.enums.Platform;
 import com.example.seo_dot.user.domain.enums.UserRoleEnum;
 import com.example.seo_dot.user.model.KakaoUserInfoDto;
 import jakarta.persistence.*;
@@ -35,6 +34,12 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    private String profileImage;
+
+    private int point;
+
+    private String phoneNumber;
+
     @Embedded
     private Address address;
 
@@ -58,5 +63,16 @@ public class User {
         this.email = kakaoUserInfo.getEmail();
         this.role = UserRoleEnum.USER;
         this.oauthId = oauthid;
+    }
+
+    public void updateUserProfile(String nickname, String profileImage) {
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+    }
+
+    public void updateUserInfo(String username, Address address, String phoneNumber) {
+        this.username = username;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
     }
 }
