@@ -14,11 +14,13 @@ public class ReviewListResponseDTO {
     private String nickname;
     private String contents;
     private int likes;
-    private boolean liked = false;
+    private boolean liked;
     private Integer score;
     private int commentCount;
     private LocalDateTime createdDate;
     private List<CommentListResponseDTO> commentsList;
+    private boolean spoiler;
+    private boolean purchaseStatus;
 
     public ReviewListResponseDTO(Review review) {
         this.id = review.getId();
@@ -32,6 +34,8 @@ public class ReviewListResponseDTO {
         this.commentsList = review.getCommentList().stream()
                 .map(CommentListResponseDTO::new)
                 .toList();
+        this.spoiler = review.isSpoiler();
+        this.purchaseStatus = review.isPurchaseStatus();
     }
 
     public void setLiked(boolean liked) {
