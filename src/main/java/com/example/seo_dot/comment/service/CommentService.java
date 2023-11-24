@@ -8,6 +8,7 @@ import com.example.seo_dot.comment.infrastructure.CommentRepository;
 import com.example.seo_dot.global.dto.MessageResponseDTO;
 import com.example.seo_dot.review.domain.Review;
 import com.example.seo_dot.review.repository.ReviewRepository;
+import com.example.seo_dot.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +22,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public MessageResponseDTO createComment(Long bookId, Long reviewId, CommentCreateRequestDTO requestDTO, Long userId) {
+    public MessageResponseDTO createComment(Long bookId, Long reviewId, CommentCreateRequestDTO requestDTO, User user) {
         bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException());
 
         Review review = reviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException());
 
-        Comment comment = Comment.createComment(review, userId, requestDTO);
+        Comment comment = Comment.createComment(review, user, requestDTO);
 
         commentRepository.save(comment);
 
@@ -34,14 +35,14 @@ public class CommentService {
     }
 
     @Transactional
-    public MessageResponseDTO modifyComment(Long bookId, Long reviewId, Long commentId, CommentModifyRequestDTO requestDTO, Long userId) {
+    public MessageResponseDTO modifyComment(Long bookId, Long reviewId, Long commentId, CommentModifyRequestDTO requestDTO, User userId) {
         bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException());
 
         reviewRepository.findById(reviewId).orElseThrow(() -> new IllegalArgumentException());
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException());
 
-        if (!comment.getUserId().equals(userId)) {
+        if (!comment.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException();
         }
 
@@ -51,14 +52,15 @@ public class CommentService {
     }
 
     @Transactional
-    public MessageResponseDTO deleteComment(Long bookId, Long reviewId, Long commentId, Long userId) {
+    public MessageResponseDTO deleteComment(Long bookId, Long reviewId, Long commentId, User userId) {
         bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException());
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException());
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException());
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException());
 
         if (!review.getUser().getId().equals(userId)) {
             throw new IllegalArgumentException();

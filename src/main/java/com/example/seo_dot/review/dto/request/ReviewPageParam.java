@@ -1,5 +1,8 @@
 package com.example.seo_dot.review.dto.request;
 
+import lombok.Setter;
+
+@Setter
 public class ReviewPageParam {
 
     private Integer page = 1;
