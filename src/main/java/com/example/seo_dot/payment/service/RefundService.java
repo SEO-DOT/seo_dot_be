@@ -81,7 +81,6 @@ public class RefundService {
         br.close(); // BufferedReader 종료
 
         conn.disconnect(); // 연결 종료
-
         return accessToken;
     }
 }

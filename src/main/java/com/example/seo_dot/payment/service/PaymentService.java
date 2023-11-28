@@ -1,47 +1,49 @@
 package com.example.seo_dot.payment.service;
 
+import com.example.seo_dot.book.repository.BookRepository;
 import com.example.seo_dot.order.domain.Order;
 import com.example.seo_dot.order.repository.OrderRepository;
-import com.example.seo_dot.payment.domain.enums.PaymentStatus;
 import com.example.seo_dot.payment.model.PayRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+import java.util.List;
+
 @Transactional
 @RequiredArgsConstructor
+@Service
 public class PaymentService {
 
     private final OrderRepository orderRepository;
-    public void saveOrder(Long userId, PayRequestDto payRequestDto) {
-        Order order = orderRepository.findById(payRequestDto.getOrderId()).orElseThrow();
-        order.changePaymentStatus(PaymentStatus.SUCCESS);
-    }
+    private final BookRepository bookRepository;
 
-//    public void saveOrder(Long userId, PayRequestDto payRequestDto) {
-//        OrderSaveDto saveDto = orderSaveDtos.get(0);
-//        Orders orders = Orders.builder()
-//                .userIdNo(userId)
-//                .orderNumber(saveDto.getOrderNumber())
-//                .receiverName(saveDto.getReceiverName())
-//                .phoneNumber(saveDto.getPhoneNumber())
-//                .zipcode(saveDto.getZipcode())
-//                .address(saveDto.getAddress())
-//                .orderRequired(saveDto.getOrderRequired())
-//                .orderStatus(PayStatus.SUCCESS.getStatus())
-//                .paymentMethod(saveDto.getPaymentMethod())
-//                .build();
-//        orderRepository.insertOrder(orders);
-//
-//        for (OrderSaveDto dto : orderSaveDtos) {
-//            int curStock = productRepository.selectProductStock(dto.getProductId());
-//            int orderStock = dto.getOrderCount();
-//
-//            if (curStock - orderStock < 0) {
-//                throw new IllegalArgumentException("상품 재고가 부족합니다.");
-//            }
-//
+    public void saveOrder(Long userId, List<PayRequestDto> payRequestDtos) {
+
+        PayRequestDto payRequestDto = payRequestDtos.get(0);
+
+        Order order = Order.builder()
+                .userId(userId)
+                .orderUid(payRequestDto.getOrderNumber())
+                .price((long) payRequestDto.getOrderPrice())
+//                .phoneNumber(payRequestDto.getPhoneNumber())
+//                .zipcode(payRequestDto.getZipcode())
+//                .address(payRequestDto.getAddress())
+//                .orderRequired(payRequestDto.getOrderRequired())
+//                .orderStatus(PaymentStatus.SUCCESS.getStatus())
+//                .paymentMethod(payRequestDto.getPaymentMethod())
+                .build();
+        orderRepository.save(order);
+
+        for (PayRequestDto dto : payRequestDtos) {
+            int curStock = bookRepository.findById(dto.getBookId()).orElseThrow().getStock();
+            int orderStock = dto.getOrderCount();
+
+            if (curStock - orderStock < 0) {
+                throw new IllegalArgumentException("상품 재고가 부족합니다.");
+            }
+
+//            상품 재고 줄이는 메서드?
 //            OrderProduct orderProduct = OrderProduct.builder()
 //                    .orderId(orders.getOrderId())
 //                    .productId(dto.getProductId())
@@ -52,6 +54,6 @@ public class PaymentService {
 //                    .build();
 //            orderProductRepository.insertOrderProduct(orderProduct);
 //            productRepository.updateProductStock(dto.getProductId(), dto.getOrderCount());
-//        }
-//    }
+        }
+    }
 }
