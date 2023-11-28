@@ -1,15 +1,12 @@
-package com.example.seo_dot.payment.model;
+package com.example.seo_dot.order.domain;
 
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
-@ToString
-public class PayRequestDto {
-
+public class OrderRequestDto {
     private Long userId;
     private Long bookId;
-    private int orderPrice;
+    private long orderPrice;
     private int orderCount;
     private int orderDiscount;
     private String phoneNumber;

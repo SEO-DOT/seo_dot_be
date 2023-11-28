@@ -1,8 +1,7 @@
 package com.example.seo_dot.payment.controller;
 
-import com.example.seo_dot.cart.dto.CartRequestDTO;
 import com.example.seo_dot.global.security.UserDetailsImpl;
-import com.example.seo_dot.payment.model.PayRequestDto;
+import com.example.seo_dot.order.domain.OrderRequestDto;
 import com.example.seo_dot.payment.service.PaymentService;
 import com.example.seo_dot.payment.service.RefundService;
 import com.siot.IamportRestClient.IamportClient;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,11 +43,11 @@ public class PaymentController {
     }
 
     @PostMapping("/payment")
-    public ResponseEntity<String> paymentComplete(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody List<PayRequestDto> payRequestDtos) throws IOException {
-        String orderNumber = payRequestDtos.get(0).getOrderNumber();
+    public ResponseEntity<String> paymentComplete(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody OrderRequestDto orderRequestDto) throws IOException {
+        String orderNumber = orderRequestDto.getOrderNumber();
         try {
             Long userId = userDetails.getUser().getId();
-            paymentService.saveOrder(userId, payRequestDtos);
+            paymentService.saveOrder(userId, orderRequestDto);
             log.info("결제 성공 : 주문 번호 {}", orderNumber);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
