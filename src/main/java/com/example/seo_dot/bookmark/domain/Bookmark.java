@@ -25,12 +25,12 @@ public class Bookmark {
     private Long id;
     private String category;
     private String thumbnail;
-    private String color;
+    private ColorCode colorCode;
     private Long userId;
 
     public void updateBookmark(RequestBookmarkDto requestBookmarkDto) {
         this.category = requestBookmarkDto.getCategory();
-        this.color = requestBookmarkDto.getColor();
+        this.colorCode = ColorCode.random();
     }
 
     public void createThumbnail(Book book) {

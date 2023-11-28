@@ -3,6 +3,7 @@ package com.example.seo_dot.bookmark.service;
 import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.repository.BookRepository;
 import com.example.seo_dot.bookmark.domain.Bookmark;
+import com.example.seo_dot.bookmark.domain.ColorCode;
 import com.example.seo_dot.bookmark.model.RequestBookmarkDto;
 import com.example.seo_dot.bookmark.model.ResponseBookmarkDto;
 import com.example.seo_dot.bookmark.model.ResponseBookmarkListDto;
@@ -28,7 +29,7 @@ public class BookmarkService {
         Long userId = userDetailsImpl.getUser().getId();
         Bookmark bookmark = Bookmark.builder()
                 .category(requestBookmarkDto.getCategory())
-                .color(requestBookmarkDto.getColor())
+                .colorCode(ColorCode.random())
                 .userId(userId)
                 .build();
 
