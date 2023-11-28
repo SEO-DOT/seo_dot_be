@@ -11,7 +11,7 @@ public class ResponseBookmarkDto {
 
     private Long categoryId;
     private String category;
-    private ColorCode colorCode;
+    private String colorCode;
     private String thumbnail;
 
     public ResponseBookmarkDto(Bookmark bookmark) {

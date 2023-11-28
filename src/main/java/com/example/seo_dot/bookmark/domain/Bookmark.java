@@ -25,7 +25,7 @@ public class Bookmark {
     private Long id;
     private String category;
     private String thumbnail;
-    private ColorCode colorCode;
+    private String colorCode;
     private Long userId;
 
     public void updateBookmark(RequestBookmarkDto requestBookmarkDto) {

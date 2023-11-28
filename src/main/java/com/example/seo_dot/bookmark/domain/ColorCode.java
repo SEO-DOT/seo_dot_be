@@ -10,11 +10,11 @@ public enum ColorCode {
     public String getColorCode() {
         return colorCode;
     }
-    public static ColorCode random() {
+    public static String random() {
         ColorCode[] values = values();
         int length = values.length;
         Random random = new Random();
         int randomIndex = random.nextInt(length);
-        return values[randomIndex];
+        return "#" + values[randomIndex];
     }
 }
