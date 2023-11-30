@@ -49,5 +49,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd /home/ubuntu
+          rm -rf SEO_DOT-0.0.1-SNAPSHOT.jar
+          mv /home/ubuntu/source/build/libs/SEO_DOT-0.0.1-SNAPSHOT.jar /home/ubuntu
           sudo fuser -k 8080/tcp
           sudo nohup java -jar SEO_DOT-0.0.1-SNAPSHOT.jar --spring.config.name=application-dev
