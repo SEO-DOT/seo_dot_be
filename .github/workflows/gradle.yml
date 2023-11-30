@@ -39,7 +39,7 @@ jobs:
         source: "build/libs/*.jar"
         target: "source"
         rm: true
-        
+  deploy:
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
