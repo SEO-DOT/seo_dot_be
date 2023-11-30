@@ -51,4 +51,4 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            sudo source /home/ubuntu/deploy.sh
+            source /home/ubuntu/deploy.sh
