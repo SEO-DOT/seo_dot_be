@@ -8,4 +8,6 @@ public interface CartRepository extends JpaRepository<Cart, Long>, QCartReposito
     Integer countByUserId(Long userId);
 
     Cart findByBookId(Long bookId);
+
+    Cart findByIdAndUserId(Long id, Long userId);
 }
