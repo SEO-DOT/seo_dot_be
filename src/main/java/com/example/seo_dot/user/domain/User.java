@@ -1,9 +1,10 @@
 package com.example.seo_dot.user.domain;
 
+import com.example.seo_dot.user.domain.dto.SignupRequestDto;
 import com.example.seo_dot.user.domain.enums.Gender;
-import com.example.seo_dot.user.domain.enums.Platform;
 import com.example.seo_dot.user.domain.enums.UserRoleEnum;
 import com.example.seo_dot.user.model.KakaoUserInfoDto;
+import com.example.seo_dot.user.model.SignupInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String phoneNumber;
+
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -42,6 +46,7 @@ public class User {
     private OauthId oauthId;
 
     private Gender gender;
+    private String age;
     private boolean activated;
     private boolean deleted;
 
@@ -58,5 +63,13 @@ public class User {
         this.email = kakaoUserInfo.getEmail();
         this.role = UserRoleEnum.USER;
         this.oauthId = oauthid;
+    }
+
+    public void update(SignupInfoRequestDto signupInfoRequestDto) {
+        this.nickname = signupInfoRequestDto.getNickname();
+        this.phoneNumber = signupInfoRequestDto.getPhoneNumber();
+        this.age = signupInfoRequestDto.getAge();
+        this.address = signupInfoRequestDto.getAddress();
+        this.gender = signupInfoRequestDto.getGender();
     }
 }
