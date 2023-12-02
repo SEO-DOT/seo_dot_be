@@ -78,7 +78,6 @@ public class UserService {
     }
 
     public void createsignupInfo(UserDetailsImpl userDetails, SignupInfoRequestDto signupInfoRequestDto) {
-        User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow();
-
+        userRepository.findById(userDetails.getUser().getId()).orElseThrow().updateSignupInfo(signupInfoRequestDto);
     }
 }

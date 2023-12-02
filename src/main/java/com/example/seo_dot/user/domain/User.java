@@ -35,6 +35,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
+    private String postNumber;
+
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -65,11 +67,12 @@ public class User {
         this.oauthId = oauthid;
     }
 
-    public void update(SignupInfoRequestDto signupInfoRequestDto) {
-        this.nickname = signupInfoRequestDto.getNickname();
+    public void updateSignupInfo(SignupInfoRequestDto signupInfoRequestDto) {
         this.phoneNumber = signupInfoRequestDto.getPhoneNumber();
+        this.nickname = signupInfoRequestDto.getNickname();
+        this.postNumber = signupInfoRequestDto.getPostNumber();
         this.age = signupInfoRequestDto.getAge();
-        this.address = signupInfoRequestDto.getAddress();
-        this.gender = signupInfoRequestDto.getGender();
+        this.address = new Address(signupInfoRequestDto.getPostNumber(), signupInfoRequestDto.getStreetAddress(), signupInfoRequestDto.getDetailAddress());
+        this.gender = Gender.valueOf(signupInfoRequestDto.getGender());
     }
 }

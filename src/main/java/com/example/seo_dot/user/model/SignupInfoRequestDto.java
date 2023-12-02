@@ -10,7 +10,9 @@ public class SignupInfoRequestDto {
     private String phoneNumber;
     private String nickname;
     private String postNumber;
-    private String address;
+    private String zoneCode;
+    private String streetAddress;
+    private String detailAddress;
     private String age;
     private String gender;
 }
