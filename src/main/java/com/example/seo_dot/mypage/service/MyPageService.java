@@ -3,10 +3,14 @@ package com.example.seo_dot.mypage.service;
 import com.example.seo_dot.global.dto.MessageResponseDTO;
 import com.example.seo_dot.global.image.ImageFolder;
 import com.example.seo_dot.global.image.ImageUploader;
+import com.example.seo_dot.mypage.dto.request.MyPageOrderPageParam;
 import com.example.seo_dot.mypage.dto.request.MyPageUserUpdateRequestDTO;
 import com.example.seo_dot.mypage.dto.response.MyPageReviewResponseDTO;
 import com.example.seo_dot.mypage.dto.response.MyPageUserDetailResponseDTO;
 import com.example.seo_dot.mypage.dto.response.MyPageUserInfoResponseDTO;
+import com.example.seo_dot.mypage.dto.response.MyPageUserOrderListResponseDTO;
+import com.example.seo_dot.order.domain.Order;
+import com.example.seo_dot.order.repository.OrderRepository;
 import com.example.seo_dot.review.domain.Review;
 import com.example.seo_dot.review.dto.request.ReviewPageParam;
 import com.example.seo_dot.review.repository.ReviewLikeRepository;
@@ -18,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +38,7 @@ public class MyPageService {
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewRepository reviewRepository;
     private final ImageUploader imageUploader;
+    private final OrderRepository orderRepository;
 
     public MyPageUserInfoResponseDTO getMyPageUserInfo(User user) {
         Integer reviewCount = reviewRepository.countByUserId(user.getId());
@@ -96,11 +102,19 @@ public class MyPageService {
         return result;
     }
 
+    public Slice<MyPageUserOrderListResponseDTO> getUserOrders(MyPageOrderPageParam pageParam, User user) {
+        PageRequest pageRequest = PageRequest.of(pageParam.getPage(), pageParam.getPer(), Sort.Direction.DESC, "createdAt");
+        Slice<Order> orders = orderRepository.findSliceByUser(user, pageRequest);
+        Slice<MyPageUserOrderListResponseDTO> result = orders
+                .map(MyPageUserOrderListResponseDTO::new);
+        return result;
+    }
     private void deleteExistingProfileImage(User user) {
         if (user.getProfileImage() != null) {
             imageUploader.deleteImage(user.getProfileImage());
         }
     }
+
     private void updateProfileImage(MultipartFile multipartFile, User user) {
         String profileImage = imageUploader.storeImage(multipartFile, ImageFolder.PROFILE);
         deleteExistingProfileImage(user);
