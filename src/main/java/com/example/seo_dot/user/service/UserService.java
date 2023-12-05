@@ -1,5 +1,6 @@
 package com.example.seo_dot.user.service;
 
+import com.example.seo_dot.bookmark.model.NicknameRequestDto;
 import com.example.seo_dot.global.jwt.JwtUtil;
 import com.example.seo_dot.global.security.UserDetailsImpl;
 import com.example.seo_dot.user.domain.OauthId;
@@ -79,5 +80,11 @@ public class UserService {
 
     public void createsignupInfo(UserDetailsImpl userDetails, SignupInfoRequestDto signupInfoRequestDto) {
         userRepository.findById(userDetails.getUser().getId()).orElseThrow().updateSignupInfo(signupInfoRequestDto);
+    }
+
+    public void validateNickname(UserDetailsImpl userDetails, NicknameRequestDto nicknameRequestDto) {
+        if (userRepository.findByNickname(nicknameRequestDto.getNickname()).isPresent()) {
+            throw new IllegalArgumentException("중복된 닉네임입니다");
+        }
     }
 }

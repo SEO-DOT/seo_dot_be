@@ -1,5 +1,6 @@
 package com.example.seo_dot.user.controller;
 
+import com.example.seo_dot.bookmark.model.NicknameRequestDto;
 import com.example.seo_dot.global.jwt.Token;
 import com.example.seo_dot.global.security.UserDetailsImpl;
 import com.example.seo_dot.user.domain.dto.SignupRequestDto;
@@ -49,9 +50,17 @@ public class UserController {
         return tokens;
     }
 
+
+
     @PostMapping("/api/user/signup/info")
     public ResponseEntity signup(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody SignupInfoRequestDto signupInfoRequestDto) {
         userService.createsignupInfo(userDetails, signupInfoRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("api/user/nickname")
+    public ResponseEntity validateNickname(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody NicknameRequestDto nicknameRequestDto) {
+        userService.validateNickname(userDetails, nicknameRequestDto);
         return ResponseEntity.ok().build();
     }
 }
