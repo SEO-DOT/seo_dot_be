@@ -1,4 +1,4 @@
-package com.example.seo_dot.bookmark.domain;
+package com.example.seo_dot.library.domain;
 
 import java.util.Random;
 

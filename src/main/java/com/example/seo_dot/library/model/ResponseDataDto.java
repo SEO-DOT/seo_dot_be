@@ -1,4 +1,4 @@
-package com.example.seo_dot.bookmark.model;
+package com.example.seo_dot.library.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

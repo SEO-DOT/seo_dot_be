@@ -1,6 +1,6 @@
 package com.example.seo_dot.book.domain;
 
-import com.example.seo_dot.bookmark.domain.Bookmark;
+import com.example.seo_dot.library.domain.Library;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,8 +36,8 @@ public class Book {
     private String isAdultContent;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookmarkId")
-    private Bookmark bookmark;
+    @JoinColumn(name = "libraryId")
+    private Library library;
 
     public Integer getDiscountPrice() {
         if (this.price <= 0 || this.discountRate <= 0) {
@@ -50,11 +50,11 @@ public class Book {
         this.viewCount++;
     }
 
-    public void addBookmark(Bookmark bookmark) {
-        this.bookmark = bookmark;
+    public void addBookmark(Library library) {
+        this.library = library;
     }
 
     public void cancelBookmark() {
-        this.bookmark = null;
+        this.library = null;
     }
 }
