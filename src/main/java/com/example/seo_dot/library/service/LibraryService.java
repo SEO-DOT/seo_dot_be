@@ -1,15 +1,13 @@
 package com.example.seo_dot.library.service;
 
-import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.repository.BookRepository;
+import com.example.seo_dot.global.security.UserDetailsImpl;
 import com.example.seo_dot.library.domain.ColorCode;
 import com.example.seo_dot.library.domain.Library;
 import com.example.seo_dot.library.model.RequestLibraryDto;
-import com.example.seo_dot.library.model.ResponseLibraryDto;
-import com.example.seo_dot.library.model.ResponseLibraryBookListDto;
 import com.example.seo_dot.library.model.ResponseDataDto;
+import com.example.seo_dot.library.model.ResponseLibraryDto;
 import com.example.seo_dot.library.repository.LibraryRepository;
-import com.example.seo_dot.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,25 +49,6 @@ public class LibraryService {
     public List<ResponseLibraryDto> readLibraryList(UserDetailsImpl userDetailsImpl) {
         return libraryRepository.findAllByUserId(userDetailsImpl.getUser().getId()).stream()
                 .map(ResponseLibraryDto::new)
-                .collect(Collectors.toList());
-    }
-
-    public ResponseDataDto addBookmark(Long bookId, Long libraryId) {
-        Book book = bookRepository.findById(bookId).orElseThrow();
-        Library library = libraryRepository.findById(libraryId).orElseThrow();
-        book.addBookmark(library);
-        library.createThumbnail(book);
-        return ResponseDataDto.ok();
-    }
-
-    public ResponseDataDto cancelBookmark(Long bookId) {
-        bookRepository.findById(bookId).orElseThrow().cancelBookmark();
-        return ResponseDataDto.ok();
-    }
-
-    public List<ResponseLibraryBookListDto> getBookmarkList(Long bookmarkId) {
-        return bookRepository.findAllByBookmarkId(bookmarkId).stream()
-                .map(ResponseLibraryBookListDto::new)
                 .collect(Collectors.toList());
     }
 }

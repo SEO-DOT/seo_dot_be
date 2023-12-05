@@ -36,21 +36,4 @@ public class LibraryController {
     public ResponseEntity<List> getLibraries(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl){
         return ResponseEntity.ok().body(libraryService.readLibraryList(userDetailsImpl));
     }
-
-    @GetMapping("/{bookmarkId}")
-    public ResponseEntity getBookmarkList(@PathVariable Long bookmarkId) {
-        return ResponseEntity.ok().body(libraryService.getBookmarkList(bookmarkId));
-    }
-
-    @PostMapping("/{bookmarkId}/{bookId}")
-    public ResponseEntity addBookmark(@PathVariable Long bookId, @PathVariable Long bookmarkId) {
-
-        return ResponseEntity.ok().body(libraryService.addBookmark(bookId, bookmarkId));
-    }
-
-    @DeleteMapping("/{bookId}")
-    public ResponseEntity cancelBookmark(@PathVariable Long bookId) {
-
-        return ResponseEntity.ok().body(libraryService.cancelBookmark(bookId));
-    }
 }
