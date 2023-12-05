@@ -32,6 +32,7 @@ public class Book {
     private Double score;
     private String categoryCode;
     private String isAdultContent;
+    private Long bookmarkCount = 0L;
 
     public Integer getDiscountPrice() {
         if (this.price <= 0 || this.discountRate <= 0) {
@@ -49,5 +50,13 @@ public class Book {
                 .mapToDouble(Review::getScore)
                 .average()
                 .orElse(0.0);
+    }
+
+    public void addBookmark() {
+        this.bookmarkCount++;
+    }
+
+    public void deleteBookmark() {
+        this.bookmarkCount--;
     }
 }
