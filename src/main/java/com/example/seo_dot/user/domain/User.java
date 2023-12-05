@@ -3,6 +3,7 @@ package com.example.seo_dot.user.domain;
 import com.example.seo_dot.user.domain.dto.SignupRequestDto;
 import com.example.seo_dot.user.domain.enums.Gender;
 import com.example.seo_dot.user.domain.enums.UserRoleEnum;
+import com.example.seo_dot.user.model.GoogleUserInfoDto;
 import com.example.seo_dot.user.model.KakaoUserInfoDto;
 import com.example.seo_dot.user.model.SignupInfoRequestDto;
 import jakarta.persistence.*;
@@ -63,6 +64,12 @@ public class User {
 
     public User(KakaoUserInfoDto kakaoUserInfo, OauthId oauthid) {
         this.email = kakaoUserInfo.getEmail();
+        this.role = UserRoleEnum.USER;
+        this.oauthId = oauthid;
+    }
+
+    public User(GoogleUserInfoDto googleUserInfo, OauthId oauthid) {
+        this.email = googleUserInfo.getEmail();
         this.role = UserRoleEnum.USER;
         this.oauthId = oauthid;
     }
