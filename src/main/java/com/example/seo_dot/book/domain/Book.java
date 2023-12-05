@@ -1,11 +1,11 @@
 package com.example.seo_dot.book.domain;
 
-import com.example.seo_dot.library.domain.Library;
+import com.example.seo_dot.review.domain.Review;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -13,8 +13,6 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "books")
 @Entity
-@AllArgsConstructor(access = PROTECTED)
-@Builder
 public class Book {
 
     @Id
@@ -31,13 +29,9 @@ public class Book {
     private Integer viewCount;
     private String status;
     private Integer stock;
-    private Integer score;
+    private Double score;
     private String categoryCode;
     private String isAdultContent;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "libraryId")
-    private Library library;
 
     public Integer getDiscountPrice() {
         if (this.price <= 0 || this.discountRate <= 0) {
@@ -50,11 +44,10 @@ public class Book {
         this.viewCount++;
     }
 
-    public void addBookmark(Library library) {
-        this.library = library;
-    }
-
-    public void cancelBookmark() {
-        this.library = null;
+    public void updateScore(List<Review> reviews) {
+        this.score = reviews.stream()
+                .mapToDouble(Review::getScore)
+                .average()
+                .orElse(0.0);
     }
 }

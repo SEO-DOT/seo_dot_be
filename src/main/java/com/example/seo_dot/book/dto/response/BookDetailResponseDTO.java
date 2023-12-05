@@ -18,7 +18,7 @@ public class BookDetailResponseDTO {
     private Integer price;
     private Integer discountRate;
     private Integer discountPrice;
-    private Integer score;
+    private Double score;
     private boolean bookmark;
     private String description;
     private String publicationDate;
@@ -35,7 +35,7 @@ public class BookDetailResponseDTO {
         this.status = book.getStatus();
         this.stock = book.getStock();
         this.isbn = book.getIsbn();
-        this.price = book.getStock();
+        this.price = book.getPrice();
         this.discountRate = book.getDiscountRate();
         this.discountPrice = book.getDiscountPrice();
         this.score = book.getScore();
