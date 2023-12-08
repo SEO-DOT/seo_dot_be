@@ -3,9 +3,7 @@ package com.example.seo_dot.user.controller;
 import com.example.seo_dot.bookmark.model.NicknameRequestDto;
 import com.example.seo_dot.global.jwt.Token;
 import com.example.seo_dot.global.security.UserDetailsImpl;
-import com.example.seo_dot.user.domain.dto.SignupRequestDto;
 import com.example.seo_dot.user.model.SignupInfoRequestDto;
-import com.example.seo_dot.user.service.GoogleService;
 import com.example.seo_dot.user.service.KakaoService;
 import com.example.seo_dot.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +23,6 @@ import java.util.Map;
 public class UserController {
 
     private final KakaoService kakaoService;
-    private final GoogleService googleService;
     private final UserService userService;
 
     @GetMapping("/test")
@@ -46,15 +43,6 @@ public class UserController {
     @GetMapping("/api/user/kakao/callback")
     public ResponseEntity<Token> kakaoLogin(@RequestParam String code) throws JsonProcessingException {
         Token token =  kakaoService.kakaoLogin(code);
-
-        ResponseEntity<Token> tokens = ResponseEntity.ok().body(token);
-        log.info("response={}", tokens.getBody().getAccessToken());
-        return tokens;
-    }
-
-    @GetMapping("/api/user/google/callback")
-    public ResponseEntity<Token> googleLogin(@RequestParam String code) throws JsonProcessingException {
-        Token token =  googleService.googleLogin(code);
 
         ResponseEntity<Token> tokens = ResponseEntity.ok().body(token);
         log.info("response={}", tokens.getBody().getAccessToken());
