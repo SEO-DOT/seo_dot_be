@@ -1,16 +1,15 @@
-package com.example.seo_dot.review.service;
+package com.example.seo_dot.comment.review.service;
 
 import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.book.repository.BookRepository;
 import com.example.seo_dot.global.dto.MessageResponseDTO;
-import com.example.seo_dot.review.domain.Review;
-import com.example.seo_dot.review.dto.request.ReviewCreateRequestDTO;
-import com.example.seo_dot.review.dto.request.ReviewModifyRequestDTO;
-import com.example.seo_dot.review.dto.request.ReviewPageParam;
-import com.example.seo_dot.review.dto.response.BestReviewListResponseDTO;
-import com.example.seo_dot.review.dto.response.ReviewListResponseDTO;
-import com.example.seo_dot.review.repository.ReviewLikeRepository;
-import com.example.seo_dot.review.repository.ReviewRepository;
+import com.example.seo_dot.comment.review.domain.Review;
+import com.example.seo_dot.comment.review.dto.request.ReviewCreateRequestDTO;
+import com.example.seo_dot.comment.review.dto.request.ReviewModifyRequestDTO;
+import com.example.seo_dot.comment.review.dto.request.ReviewPageParam;
+import com.example.seo_dot.comment.review.dto.response.ReviewListResponseDTO;
+import com.example.seo_dot.comment.review.repository.ReviewLikeRepository;
+import com.example.seo_dot.comment.review.repository.ReviewRepository;
 import com.example.seo_dot.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

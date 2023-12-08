@@ -3,7 +3,7 @@ package com.example.seo_dot.book.controller;
 import com.example.seo_dot.book.dto.response.BookListResponseDTO;
 import com.example.seo_dot.book.dto.response.NewBookListResponseDTO;
 import com.example.seo_dot.book.service.MainPageService;
-import com.example.seo_dot.review.dto.response.BestReviewListResponseDTO;
+import com.example.seo_dot.comment.review.dto.response.BestReviewListResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

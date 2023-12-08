@@ -1,7 +1,7 @@
-package com.example.seo_dot.review.controller;
+package com.example.seo_dot.comment.review.controller;
 
 import com.example.seo_dot.global.dto.MessageResponseDTO;
-import com.example.seo_dot.review.service.ReviewLikeService;
+import com.example.seo_dot.comment.review.service.ReviewLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

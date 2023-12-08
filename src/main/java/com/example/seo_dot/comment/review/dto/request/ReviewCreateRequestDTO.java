@@ -1,4 +1,4 @@
-package com.example.seo_dot.review.dto.request;
+package com.example.seo_dot.comment.review.dto.request;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.example.seo_dot.review.dto.response;
+package com.example.seo_dot.comment.review.dto.response;
 
 import com.example.seo_dot.comment.domain.Comment;
 import lombok.Getter;

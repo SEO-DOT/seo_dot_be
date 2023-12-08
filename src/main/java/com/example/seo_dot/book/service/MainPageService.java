@@ -5,8 +5,8 @@ import com.example.seo_dot.book.dto.response.BookListResponseDTO;
 import com.example.seo_dot.book.dto.response.KeywordResponseDTO;
 import com.example.seo_dot.book.dto.response.NewBookListResponseDTO;
 import com.example.seo_dot.book.repository.BookRepository;
-import com.example.seo_dot.review.dto.response.BestReviewListResponseDTO;
-import com.example.seo_dot.review.repository.ReviewRepository;
+import com.example.seo_dot.comment.review.dto.response.BestReviewListResponseDTO;
+import com.example.seo_dot.comment.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

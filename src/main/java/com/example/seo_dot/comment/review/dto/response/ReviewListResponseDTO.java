@@ -1,6 +1,6 @@
-package com.example.seo_dot.review.dto.response;
+package com.example.seo_dot.comment.review.dto.response;
 
-import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.comment.review.domain.Review;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

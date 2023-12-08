@@ -1,7 +1,7 @@
-package com.example.seo_dot.review.repository;
+package com.example.seo_dot.comment.review.repository;
 
-import com.example.seo_dot.review.domain.Review;
-import com.example.seo_dot.review.dto.response.BestReviewListResponseDTO;
+import com.example.seo_dot.comment.review.dto.response.BestReviewListResponseDTO;
+import com.example.seo_dot.comment.review.domain.Review;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;

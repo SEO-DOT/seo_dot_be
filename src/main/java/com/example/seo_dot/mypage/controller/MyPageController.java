@@ -10,7 +10,7 @@ import com.example.seo_dot.mypage.dto.response.MyPageUserDetailResponseDTO;
 import com.example.seo_dot.mypage.dto.response.MyPageUserInfoResponseDTO;
 import com.example.seo_dot.mypage.dto.response.MyPageUserOrderListResponseDTO;
 import com.example.seo_dot.mypage.service.MyPageService;
-import com.example.seo_dot.review.dto.request.ReviewPageParam;
+import com.example.seo_dot.comment.review.dto.request.ReviewPageParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;

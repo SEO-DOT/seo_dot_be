@@ -1,4 +1,4 @@
-package com.example.seo_dot.review.domain;
+package com.example.seo_dot.comment.review.domain;
 
 import com.example.seo_dot.user.domain.User;
 import jakarta.persistence.*;

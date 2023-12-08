@@ -1,6 +1,6 @@
-package com.example.seo_dot.review.repository;
+package com.example.seo_dot.comment.review.repository;
 
-import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.comment.review.domain.Review;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

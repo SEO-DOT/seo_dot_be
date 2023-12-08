@@ -1,7 +1,7 @@
 package com.example.seo_dot.mypage.dto.response;
 
 import com.example.seo_dot.book.domain.Book;
-import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.comment.review.domain.Review;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

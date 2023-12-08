@@ -1,10 +1,13 @@
 package com.example.seo_dot.user.service;
 
 import com.example.seo_dot.global.jwt.JwtUtil;
+import com.example.seo_dot.global.security.UserDetailsImpl;
 import com.example.seo_dot.user.domain.OauthId;
 import com.example.seo_dot.user.domain.User;
+import com.example.seo_dot.user.domain.dto.NicknameRequestDto;
 import com.example.seo_dot.user.domain.dto.SignupRequestDto;
 import com.example.seo_dot.user.domain.enums.UserRoleEnum;
+import com.example.seo_dot.user.model.SignupInfoRequestDto;
 import com.example.seo_dot.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -59,10 +62,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void cookie(HttpServletResponse response) {
-
-    }
-
     public String tokenRefresh(HttpServletRequest request) {
         String refreshToken = jwtUtil.getJwtFromHeader(request);
         jwtUtil.refreshTokenCheck(refreshToken);
@@ -73,6 +72,16 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("no have user"));
 
         return jwtUtil.createAccessToken(user);
+    }
+
+    public void createsignupInfo(UserDetailsImpl userDetails, SignupInfoRequestDto signupInfoRequestDto) {
+        userRepository.findById(userDetails.getUser().getId()).orElseThrow().updateSignupInfo(signupInfoRequestDto);
+    }
+
+    public void validateNickname(NicknameRequestDto nicknameRequestDto) {
+        if (userRepository.existsByNickname(nicknameRequestDto.getNickname())) {
+            throw new IllegalArgumentException("중복된 닉네임입니다");
+        }
     }
 
 }

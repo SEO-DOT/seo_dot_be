@@ -1,10 +1,10 @@
-package com.example.seo_dot.review.domain;
+package com.example.seo_dot.comment.review.domain;
 
 import com.example.seo_dot.book.domain.Book;
 import com.example.seo_dot.comment.domain.Comment;
+import com.example.seo_dot.comment.review.dto.request.ReviewModifyRequestDTO;
 import com.example.seo_dot.global.entity.BaseEntity;
-import com.example.seo_dot.review.dto.request.ReviewCreateRequestDTO;
-import com.example.seo_dot.review.dto.request.ReviewModifyRequestDTO;
+import com.example.seo_dot.comment.review.dto.request.ReviewCreateRequestDTO;
 import com.example.seo_dot.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
