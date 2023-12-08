@@ -1,14 +1,13 @@
-package com.example.seo_dot.review.controller;
+package com.example.seo_dot.comment.review.controller;
 
 import com.example.seo_dot.book.dto.response.PageDto;
+import com.example.seo_dot.comment.review.dto.request.ReviewCreateRequestDTO;
+import com.example.seo_dot.comment.review.dto.request.ReviewModifyRequestDTO;
+import com.example.seo_dot.comment.review.dto.request.ReviewPageParam;
+import com.example.seo_dot.comment.review.service.ReviewService;
 import com.example.seo_dot.global.dto.MessageResponseDTO;
 import com.example.seo_dot.global.security.UserDetailsImpl;
-import com.example.seo_dot.review.dto.request.ReviewPageParam;
-import com.example.seo_dot.review.dto.request.ReviewCreateRequestDTO;
-import com.example.seo_dot.review.dto.request.ReviewModifyRequestDTO;
-import com.example.seo_dot.review.dto.response.ReviewListResponseDTO;
-import com.example.seo_dot.review.service.ReviewService;
-import com.example.seo_dot.user.domain.User;
+import com.example.seo_dot.comment.review.dto.response.ReviewListResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;

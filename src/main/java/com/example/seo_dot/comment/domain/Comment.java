@@ -2,7 +2,7 @@ package com.example.seo_dot.comment.domain;
 
 import com.example.seo_dot.comment.dto.request.CommentCreateRequestDTO;
 import com.example.seo_dot.global.entity.BaseEntity;
-import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.comment.review.domain.Review;
 import com.example.seo_dot.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

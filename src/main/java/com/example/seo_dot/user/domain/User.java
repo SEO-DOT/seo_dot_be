@@ -3,6 +3,7 @@ package com.example.seo_dot.user.domain;
 import com.example.seo_dot.user.domain.enums.Gender;
 import com.example.seo_dot.user.domain.enums.UserRoleEnum;
 import com.example.seo_dot.user.model.KakaoUserInfoDto;
+import com.example.seo_dot.user.model.SignupInfoRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,10 @@ public class User {
 
     private String phoneNumber;
 
+    private String postNumber;
+
+    private String age;
+
     @Embedded
     private Address address;
 
@@ -74,5 +79,13 @@ public class User {
         this.username = username;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void updateSignupInfo(SignupInfoRequestDto signupInfoRequestDto) {
+        this.phoneNumber = signupInfoRequestDto.getPhoneNumber();
+        this.nickname = signupInfoRequestDto.getNickname();
+        this.postNumber = signupInfoRequestDto.getPostNumber();
+        this.age = signupInfoRequestDto.getAge();
+        this.address = new Address(signupInfoRequestDto.getPostNumber(), signupInfoRequestDto.getStreetAddress(), signupInfoRequestDto.getDetailAddress());
     }
 }

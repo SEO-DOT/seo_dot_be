@@ -1,6 +1,6 @@
 package com.example.seo_dot.book.domain;
 
-import com.example.seo_dot.review.domain.Review;
+import com.example.seo_dot.comment.review.domain.Review;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

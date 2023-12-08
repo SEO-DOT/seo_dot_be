@@ -2,6 +2,9 @@ package com.example.seo_dot.user.controller;
 
 import com.example.seo_dot.global.jwt.JwtUtil;
 import com.example.seo_dot.global.jwt.Token;
+import com.example.seo_dot.global.security.UserDetailsImpl;
+import com.example.seo_dot.user.domain.dto.NicknameRequestDto;
+import com.example.seo_dot.user.model.SignupInfoRequestDto;
 import com.example.seo_dot.user.service.KakaoService;
 import com.example.seo_dot.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,10 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,5 +52,17 @@ public class UserController {
         ResponseEntity<Token> tokens = ResponseEntity.ok().body(token);
         log.info("response={}", tokens.getBody().getAccessToken());
         return tokens;
+    }
+
+    @PostMapping("/api/user/signup/info")
+    public ResponseEntity signup(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody SignupInfoRequestDto signupInfoRequestDto) {
+        userService.createsignupInfo(userDetails, signupInfoRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/api/user/nickname")
+    public ResponseEntity validateNickname(@RequestBody NicknameRequestDto nicknameRequestDto) {
+        userService.validateNickname(nicknameRequestDto);
+        return ResponseEntity.ok().build();
     }
 }
