@@ -1,8 +1,9 @@
 package com.example.seo_dot.payment.domain;
 
-import com.example.seo_dot.payment.domain.enums.PaymentStatus;
-import com.example.seo_dot.user.domain.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

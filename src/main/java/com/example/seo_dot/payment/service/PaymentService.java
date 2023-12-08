@@ -4,6 +4,7 @@ import com.example.seo_dot.order.domain.Order;
 import com.example.seo_dot.order.domain.OrderRequestDto;
 import com.example.seo_dot.order.repository.OrderRepository;
 import com.example.seo_dot.payment.domain.Payment;
+import com.example.seo_dot.payment.domain.enums.PaymentStatus;
 import com.example.seo_dot.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ public class PaymentService {
         if (order.getPrice() != orderRequestDto.getOrderPrice()) {
             throw new IllegalArgumentException("결제금액이 일치하지 않습니다");
         }
+
+        order.changePaymentStatus(PaymentStatus.SUCCESS);
+
         Payment payment = Payment.builder()
                 .price(orderRequestDto.getOrderPrice())
                 .userId(userId)
